@@ -18,6 +18,7 @@ def login():
 			if secrets.users[name] == passwd:
 				session['username'] = request.form['username']
 				return redirect(url_for('index'))
+		return "{}, {}".format(name, passwd)
 	return '''
 	<form method="post">
 	<p><input type=text name=username>
