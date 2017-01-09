@@ -57,15 +57,15 @@ def aircon_setter():
 		command = {'command':action, 'id':command_id, 'timestamp':timestamp}
 		with open(os.path.join(app.root_path,'aircon_command.json'),'w') as f:
 			f.write(json.dumps(command))
-		return redirect('flask/aircon/controller')
+		return redirect('aircon/controller')
 	return redirect('/')
 
 @app.route('/aircon/command')
 def aircon_command():
 	with open(os.path.join(app.root_path,'aircon_command.json'),'r') as f:
 		dat = json.loads(f.read())
-	resp = Response(response=dat, status=200, mimetype="application/json")
-	return resp
+	#resp = Response(response=dat, status=200, mimetype="application/json")
+	return json.dumps(dat)#resp
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
