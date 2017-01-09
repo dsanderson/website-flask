@@ -1,6 +1,6 @@
 from flask import Flask, session, redirect, url_for, escape, request, Response
 import secrets
-import time, json
+import time, json, os
 app = Flask(__name__)
 
 @app.route('/')
@@ -33,7 +33,7 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
-@app.route('/aircon/contoller',methods=["GET"])
+@app.route('/aircon/controller',methods=["GET"])
 def aircon_controller():
 	if 'username' in session:
 		data = '''<body><h1>DSA's aircon controller</h1>
@@ -46,23 +46,23 @@ def aircon_controller():
 		return data
 	return redirect('/')
 
-@app.route('/aircon/contoller',methods=["POST"])
+@app.route('/aircon/controller',methods=["POST"])
 def aircon_setter():
 	if 'username' in session:
 		action = request.form['action']
-		with open('aircon_command.json','r') as f:
+		with open(os.path.join(app.root_path,'aircon_command.json'),'r') as f:
 			command_id = json.loads(f.read())['id']
 		command_id += 1
 		timestamp = time.time()
 		command = {'command':action, 'id':command_id, 'timestamp':timestamp}
-		with open('aircon_command.json','w') as f:
+		with open(os.path.join(app.root_path,'aircon_command.json'),'w') as f:
 			f.write(json.dumps(command))
 		return redirect(url_for(aircon_controller))
 	return redirect('/')
 
 @app.route('/aircon/command')
 def aircon_command():
-	with open('aircon_command.json','r') as f:
+	with open(os.path.join(app.root_path,'aircon_command.json'),'r') as f:
 		dat = json.loads(f.read())
 	resp = Response(response=dat, status=200, mimetype="application/json")
 	return resp
