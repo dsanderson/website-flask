@@ -11,26 +11,26 @@ def hello_world():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+	if request.method == 'POST':
 		name = request.form['username']
 		passwd = request.form['password']
 		if name in secrets.users.keys():
 			if secrets.users[name] == passwd:
-        		session['username'] = request.form['username']
-        		return redirect(url_for('index'))
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-			<p><input type=password name=password>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+				session['username'] = request.form['username']
+				return redirect(url_for('index'))
+	return '''
+	<form method="post">
+	<p><input type=text name=username>
+	<p><input type=password name=password>
+	<p><input type=submit value=Login>
+	</form>
+	'''
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it's there
-    session.pop('username', None)
-    return redirect(url_for('index'))
+	# remove the username from the session if it's there
+	session.pop('username', None)
+	return redirect(url_for('index'))
 
 @app.route('/aircon/contoller',methods=["GET"])
 def aircon_controller():
