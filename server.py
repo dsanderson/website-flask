@@ -40,7 +40,7 @@ def aircon_controller():
 def aircon_setter():
 	pass
 
-@app.route('/aircon/command'):
+@app.route('/aircon/command')
 def aircon_command():
 	pass
 
