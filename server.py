@@ -57,7 +57,7 @@ def aircon_setter():
 		command = {'command':action, 'id':command_id, 'timestamp':timestamp}
 		with open(os.path.join(app.root_path,'aircon_command.json'),'w') as f:
 			f.write(json.dumps(command))
-		return redirect(url_for(aircon_controller))
+		return redirect('flask/aircon/controller')
 	return redirect('/')
 
 @app.route('/aircon/command')
