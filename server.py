@@ -76,7 +76,7 @@ import ferris_stuff
 @app.route('/ferris/sensor/<sensor>')
 def get_ferris_data(sensor):
 	window_size = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-	raw_data = ferris_stuff.get_data(sensor, time=window_size)
+	raw_data = ferris_stuff.get_data(sensor, window_size)
 	data = json.dumps(raw_data)
 	return data
 
