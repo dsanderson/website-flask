@@ -19,7 +19,7 @@ class Event(Base):
     value = sqla.Column(sqla.types.Float)
     text = sqla.Column(sqla.types.Unicode())
 
-def get_ferris_data(sensor, start_time):
+def get_data(sensor, start_time):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()
     events = session.query(Event).filter(sqla.and_(Event.event == unicode(sensor), Event.timestamp > start_time)).all()
