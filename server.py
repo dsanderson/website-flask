@@ -3,6 +3,7 @@ import secrets
 import time, json, os
 app = Flask(__name__)
 
+### Index block
 @app.route('/')
 def hello_world():
 	if 'username' in session:
@@ -10,6 +11,7 @@ def hello_world():
 	else:
 		return "Hello Guest!"
 
+### User management block
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST':
@@ -33,6 +35,7 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
+### Aircon control block
 @app.route('/aircon/controller',methods=["GET"])
 def aircon_controller():
 	if 'username' in session:
@@ -66,6 +69,15 @@ def aircon_command():
 		dat = json.loads(f.read())
 	#resp = Response(response=dat, status=200, mimetype="application/json")
 	return json.dumps(dat)#resp
+
+### Ferris Brewler block
+import ferris_stuff
+
+@app.route('/ferris/sensor/<sensor>')
+def get_ferris_data(sensor):
+	week_ago = datetime.datetime.utcnow() - datetime.timedelta(weeks=1)
+	raw_data = ferris_stuff.get_data(sensor, time=week_ago)
+	
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
