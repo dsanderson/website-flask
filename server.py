@@ -78,7 +78,7 @@ def get_ferris_data(sensor):
 	window_size = datetime.datetime.utcnow() - datetime.timedelta(days=1)
 	raw_data = ferris_stuff.get_data(sensor, window_size)
 	data = json.dumps(raw_data)
-	resp = Response(response=dat, status=200, mimetype="application/json")
+	resp = Response(response=data, status=200, mimetype="application/json")
 	return resp
 
 
