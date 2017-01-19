@@ -26,7 +26,8 @@ def get_data(sensor, start_time):
     #construct data to return
     data = []
     for e in events:
-
         t = int(time.mktime(e.timestamp.timetuple()))
-        data.append({'name':e.event, 'time':t, 'value':e.value})
+        #filter bad sensor data
+        if e.value > -100:
+            data.append({'name':e.event, 'time':t, 'value':e.value})
     return data
