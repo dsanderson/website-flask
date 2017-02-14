@@ -81,6 +81,16 @@ def get_ferris_data(sensor):
 	resp = Response(response=data, status=200, mimetype="application/json")
 	return resp
 
+###Personal wiki block
+@app.route('/wiki/<page>')
+def wiki(page):
+	if 'username' in session:
+		if request.method == 'GET':
+			with open("src/wiki-template.html", 'r') as f:
+				txt = f.read()
+			return txt
+	return redirect('/')
+
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
