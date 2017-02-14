@@ -5,16 +5,7 @@
     <meta charset="utf-8">
     <title>The International Journal of DSA</title>
     <link rel="stylesheet" href="/css/wiki.css">
-    <script type="text/javascript" src="/js/markdown-it/markdown-it.min"></script>
-    <style type="text/css" media="screen">
-      #editor {
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-      }
-    </style>
+    <script type="text/javascript" src="/js/markdown-it/markdown-it.min.js"></script>
   </head>
   <body>
     <div id="display">
@@ -29,6 +20,19 @@
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/markdown");
+    </script>
+    <script>
+      var md = window.markdownit({html: true, linkify: true, typographer: true});
+      var old_state = editor.getValue();
+      function update_and_save() {
+        new_state = editor.getValue();
+        if (new_state != old_state) {
+          //update the html
+          var html = md.render(new_state);
+          document.getElementById("display").innerHTML = html;
+        }
+      };
+      var markdownTimer = window.setInterval(update_and_save, 5000);
     </script>
   </body>
 </html>
