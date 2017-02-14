@@ -13,7 +13,7 @@
    }
    .flex-wrapper {
      display: flex;
-     flex-direction: row;
+     flex-direction: row-reverse;
      flex-wrap: wrap;
      justify-content: space-around;
      align-items: stretch;
@@ -26,14 +26,16 @@
    </style>
   </head>
   <body>
+    <div id="status">
+      No changes
+    </div>
     <div class="flex-wrapper">
       <div class="flex-display" id="display">
         blerg
       </div>
-      <div class="flex-display" id="editor">function foo(items) {
-          var x = "All this is syntax highlighted";
-          return x;
-      }</div>
+      <div class="flex-display" id="editor"># Test page
+        asdf
+      </div>
     </div>
     <script src="/js/ace/min/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
@@ -48,14 +50,34 @@
         var html = md.render(new_state);
         document.getElementById("display").innerHTML = html;
       };
+      function save(text) {
+        //set save display
+        document.getElementById("status").innerHTML = "Saving...";
+        var http = new XMLHttpRequest();
+        var url = window.location.href;
+        var params = "text=text";
+        http.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        http.onreadystatechange = function() {//Call a function when the state changes.
+            if(http.readyState == 4 && http.status == 200) {
+                document.getElementById("status").innerHTML = http.responseText;
+            }
+        }
+        http.send(params);
+      };
       function update_and_save() {
         new_state = editor.getValue();
         if (new_state != old_state) {
           //update the html
           update_html();
+          save(new_state);
         }
       };
       var markdownTimer = window.setInterval(update_and_save, 5000);
+      update_html();
     </script>
   </body>
 </html>
