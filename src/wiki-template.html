@@ -4,23 +4,37 @@
   <head>
     <meta charset="utf-8">
     <title>The International Journal of DSA</title>
-    <link rel="stylesheet" href="/css/wiki.css">
     <script type="text/javascript" src="/js/markdown-it/markdown-it.min.js"></script>
     <style type="text/css" media="screen">
     #editor {
       width: 100%;
-      height: 100%;
+      min-height: 500px;
+      max-height: 100%;
+   }
+   .flex-wrapper {
+     display: flex;
+     flex-direction: row;
+     flex-wrap: wrap;
+     justify-content: space-around;
+     align-items: stretch;
+     align-content: stretch;
+   }
+   .flex-display {
+     max-width: 800px;
+     min-width: 400px;
    }
    </style>
   </head>
   <body>
-    <div id="display">
-      blerg
+    <div class="flex-wrapper">
+      <div class="flex-display" id="display">
+        blerg
+      </div>
+      <div class="flex-display" id="editor">function foo(items) {
+          var x = "All this is syntax highlighted";
+          return x;
+      }</div>
     </div>
-    <div id="editor">function foo(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-    }</div>
     <script src="/js/ace/min/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var editor = ace.edit("editor");
@@ -30,12 +44,15 @@
     <script>
       var md = window.markdownit({html: true, linkify: true, typographer: true});
       var old_state = editor.getValue();
+      function update_html() {
+        var html = md.render(new_state);
+        document.getElementById("display").innerHTML = html;
+      };
       function update_and_save() {
         new_state = editor.getValue();
         if (new_state != old_state) {
           //update the html
-          var html = md.render(new_state);
-          document.getElementById("display").innerHTML = html;
+          update_html();
         }
       };
       var markdownTimer = window.setInterval(update_and_save, 5000);
