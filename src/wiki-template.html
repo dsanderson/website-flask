@@ -33,8 +33,7 @@
       <div class="flex-display" id="display">
         blerg
       </div>
-      <div class="flex-display" id="editor"># Test page
-        asdf
+      <div class="flex-display" id="editor">******split here******
       </div>
     </div>
     <script src="/js/ace/min/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -46,6 +45,7 @@
     <script>
       var md = window.markdownit({html: true, linkify: true, typographer: true});
       var old_state = editor.getValue();
+      var new_state = editor.getValue();
       function update_html() {
         var html = md.render(new_state);
         document.getElementById("display").innerHTML = html;
@@ -55,7 +55,7 @@
         document.getElementById("status").innerHTML = "Saving...";
         var http = new XMLHttpRequest();
         var url = window.location.href;
-        var params = "text=text";
+        var params = "text="+text;
         http.open("POST", url, true);
 
         //Send the proper header information along with the request
@@ -74,6 +74,7 @@
           //update the html
           update_html();
           save(new_state);
+          old_state = new_state;
         }
       };
       var markdownTimer = window.setInterval(update_and_save, 5000);

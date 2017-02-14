@@ -1,6 +1,6 @@
 from flask import Flask, session, redirect, url_for, escape, request, Response
 import secrets
-import time, json, os, datetime, time
+import time, json, os, datetime, time, glob
 app = Flask(__name__)
 
 ### Index block
@@ -82,15 +82,39 @@ def get_ferris_data(sensor):
 	return resp
 
 ###Personal wiki block
-@app.route('/wiki/<page>')
+@app.route('/wiki/<page>', methods=["GET","POST"])
 def wiki(page):
 	if 'username' in session:
 		if request.method == 'GET':
+			with open(get_current_path(page), 'r') as f:
+				content = f.read()
 			with open(os.path.join(app.root_path,'src','wiki-template.html'), 'r') as f:
 				txt = f.read()
+				txts = txt.split('******split here******')
+				txt = txts[0]+content+txts[1]
 			return txt
+		elif request.method == 'POST':
+			path = get_current_path(page)
+			new_path = '.'.join(path.split('.')[:-1])+'.'+str(int(path.split('.')[-1])+1)
+			with open(new_path, 'w') as f:
+				f.write(request.form('text'))
+			return "Saved"
 	return redirect('/')
 
+def get_current_path(page):
+	path = os.path.join(app.root_path, 'wiki', page)
+	folder = os.path.dirname(path)
+	if not os.path.exists(folder):
+    	os.makedirs(folder)
+	fs = glob.glob(path+'.md.*')
+	if fs==[]:
+		f = open(path+'.md.0','w')
+		f.write('New file\n')
+		f.close()
+		return path+'.md.0'
+	else:
+		max_fnum = max([int(f.split('.')[-1]) for f in fs])
+		return path+'.md.'+str(max_fnum)
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
