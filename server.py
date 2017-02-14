@@ -105,7 +105,7 @@ def get_current_path(page):
 	path = os.path.join(app.root_path, 'wiki', page)
 	folder = os.path.dirname(path)
 	if not os.path.exists(folder):
-    	os.makedirs(folder)
+		os.makedirs(folder)
 	fs = glob.glob(path+'.md.*')
 	if fs==[]:
 		f = open(path+'.md.0','w')
