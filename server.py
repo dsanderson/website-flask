@@ -86,7 +86,7 @@ def get_ferris_data(sensor):
 def wiki(page):
 	if 'username' in session:
 		if request.method == 'GET':
-			with open("src/wiki-template.html", 'r') as f:
+			with open(os.path.join(app.root_path,'src','wiki-template.html'), 'r') as f:
 				txt = f.read()
 			return txt
 	return redirect('/')
