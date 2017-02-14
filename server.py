@@ -82,7 +82,7 @@ def get_ferris_data(sensor):
 	return resp
 
 ###Personal wiki block
-@app.route('/wiki/<page>', methods=["GET","POST"])
+@app.route('/wiki/<path:page>', methods=["GET","POST"])
 def wiki(page):
 	if 'username' in session:
 		if request.method == 'GET':
