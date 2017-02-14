@@ -101,6 +101,10 @@ def wiki(page):
 			return "Saved"
 	return redirect('/')
 
+@app.route('/wiki')
+def redirect_to_wiki():
+	return redirect('/flask/wiki/index')
+
 def get_current_path(page):
 	path = os.path.join(app.root_path, 'wiki', page)
 	folder = os.path.dirname(path)
