@@ -97,7 +97,7 @@ def wiki(page):
 			path = get_current_path(page)
 			new_path = '.'.join(path.split('.')[:-1])+'.'+str(int(path.split('.')[-1])+1)
 			with open(new_path, 'w') as f:
-				f.write(request.form('text'))
+				f.write(request.form['text'])
 			return "Saved"
 	return redirect('/')
 
