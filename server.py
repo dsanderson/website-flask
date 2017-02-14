@@ -101,7 +101,7 @@ def wiki(page):
 			return "Saved"
 	return redirect('/')
 
-@app.route('/wiki')
+@app.route('/wiki/')
 def redirect_to_wiki():
 	return redirect('/flask/wiki/index')
 
