@@ -186,6 +186,7 @@ def dist(lat1,lon1, lat2, lon2):
 	return math.sqrt(x**2+y**2)
 
 #load page data
+Place = namedtuple("Place",["name","url","date","price","zip","content","lat","lon","loc"])
 pkl = open(os.path.join(app.root_path, 'seth_out.pkl'), 'rb')
 FOOD_PAGES = pickle.load(pkl)
 pkl.close()
