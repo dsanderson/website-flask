@@ -163,7 +163,7 @@ def food_search(loc, dist, search):
 	return results
 
 def food_renderer(data, loc, dist, search):
-	form = """<!-- Simple form which will send a POST request -->
+	form = u"""<!-- Simple form which will send a POST request -->
 <form action="" method="post">
   <label for="loc">Search Location:</label>
   <input id="loc" type="text" name="loc" value={}>
@@ -173,9 +173,9 @@ def food_renderer(data, loc, dist, search):
   <input id="search" type="text" name="search" value={}>
   <input type="submit" value="Search">
 </form>""".format(loc, dist, search)
-	results = ""
+	results = u""
 	for res in data:
-		blurb = '<div class="result"><h2>{}</h2><p>{}, {} mi.</p><a href="{}">{}</a><p>{}</p></div>\n'.format(res[0][0], res[0][2], res[1], res[0][1], res[0][1], res[0][5])
+		blurb = u'<div class="result"><h2>{}</h2><p>{}, {} mi.</p><a href="{}">{}</a><p>{}</p></div>\n'.format(res[0][0], res[0][2], res[1], res[0][1], res[0][1], res[0][5])
 		results += blurb
 	return form+results
 
