@@ -155,9 +155,10 @@ def food_search(loc, dist, search):
 	tokens = [t.strip().lower() for t in tokens]
 	results = []
 	for f in FOOD_PAGES:
-		if distance(lat, lon, f[6], f[7])<dist:
-			if any([t in f[5].lower() for t in tokens]):
-				results.append((f, distance(lat, lon, f[6], f[7])))
+		if f[6]!=None and f[7]!=None:
+			if distance(lat, lon, f[6], f[7])<dist:
+				if any([t in f[5].lower() for t in tokens]):
+					results.append((f, distance(lat, lon, f[6], f[7])))
 	results.sort(key=lambda x: x[0][3])
 	return results
 
