@@ -148,7 +148,7 @@ def food_search(loc, dist, search):
 		lat = float(data['results'][0]["LATITUDE"])
 		lon = float(data['results'][0]["LONGITUDE"])
 	else:
-    	return "Error, please enter an acceptable location"
+		return "Error, please enter an acceptable location"
 	#skim over places, culling based on distance, to speed up search
 	#search text
 	tokens = search.split()
