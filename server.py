@@ -155,9 +155,9 @@ def food_search(loc, dist, search):
 	tokens = [t.strip().lower() for t in tokens]
 	results = []
 	for f in FOOD_PAGES:
-		if dist(lat, lon, f[6], f[7])<dist:
+		if distance(lat, lon, f[6], f[7])<dist:
 			if any([t in f[5].lower() for t in tokens]):
-				results.append((f, dist(lat, lon, f[6], f[7])))
+				results.append((f, distance(lat, lon, f[6], f[7])))
 	results.sort(key=lambda x: x[0][3])
 	return results
 
@@ -178,7 +178,7 @@ def food_renderer(data, loc, dist, search):
 		results += blurb
 	return form+results
 
-def dist(lat1,lon1, lat2, lon2):
+def distance(lat1,lon1, lat2, lon2):
 	LAT_RATE = 69.094
 	LON_RATE = 69.056
 	x = LAT_RATE*(lat1-lat2)
