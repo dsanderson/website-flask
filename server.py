@@ -123,7 +123,7 @@ def get_current_path(page):
 
 
 ###Sethlui stuff
-@app.route('/shiok')
+@app.route('/shiok', methods=["GET","POST"])
 def food_reviews():
 	if request.method == "POST":
 		loc = request.form["loc"]
