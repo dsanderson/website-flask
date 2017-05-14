@@ -175,7 +175,7 @@ def food_renderer(data, loc, dist, search):
 </form>""".format(loc, dist, search)
 	results = u""
 	for res in data:
-		content = res[5]
+		content = res[0][5]
 		if len(content)>400:
 			content = content[:397]+u'...'
 		blurb = u'<div class="result"><h2>{}</h2><p>{}, {} mi.</p><a href="{}">{}</a><p>{}</p></div>\n'.format(res[0][0], res[0][2], res[1], res[0][1], res[0][1], content)
