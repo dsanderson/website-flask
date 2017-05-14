@@ -1,6 +1,7 @@
 from flask import Flask, session, redirect, url_for, escape, request, Response
 import secrets
-import time, json, os, datetime, time, glob
+import time, json, os, datetime, time, glob, urllib2, pickle, math
+from collections import namedtuple
 app = Flask(__name__)
 
 ### Index block
@@ -119,6 +120,75 @@ def get_current_path(page):
 	else:
 		max_fnum = max([int(f.split('.')[-1]) for f in fs])
 		return path+'.md.'+str(max_fnum)
+
+
+###Sethlui stuff
+@app.route('/shiok')
+def food_reviews():
+	if request.method == "POST":
+		loc = request.form["loc"]
+		dist = float(request.form["dist"])
+		search = request.form["search"]
+		results = food_search(loc, dist, search)
+		page = food_renderer(results, loc, dist, search)
+	elif request.method == "GET":
+		page = food_renderer([], '', '', '')
+	return page
+
+def food_search(loc, dist, search):
+	#get the coordinates for the given location
+	opener = urllib2.build_opener()
+    opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+	url = 'https://developers.onemap.sg/commonapi/search?searchVal={}&returnGeom=Y&getAddrDetails=Y'.format(loc)
+	response = opener.open(url)
+    f = response.read()
+    response.close()
+    data = json.loads(f)
+	if int(data['found'])>0:
+        lat = float(data['results'][0]["LATITUDE"])
+        lon = float(data['results'][0]["LONGITUDE"])
+    else:
+        return "Error, please enter an acceptable location"
+	#skim over places, culling based on distance, to speed up search
+	#search text
+	tokens = search.split()
+	tokens = [t.strip().lower() for t in tokens]
+	results = []
+	for f in FOOD_PAGES:
+		if dist(lat, lon, f.lat, f.lon)<dist:
+			if any([t in f.content.lower() for t in tokens]):
+				results.append((f, dist(lat, lon, f.lat, f.lon)))
+	results.sort(key=lambda x: x[0].date)
+	return results
+
+def food_renderer(data, loc, dist, search):
+	form = """<!-- Simple form which will send a POST request -->
+<form action="" method="post">
+  <label for="loc">Search Location:</label>
+  <input id="loc" type="text" name="loc" value={}>
+  <label for="dist">Search Radius:</label>
+  <input id="dist" type="text" name="dist" value={}>
+  <label for="search">Search Terms (enter words separated by spaces):</label>
+  <input id="search" type="text" name="search" value={}>
+  <input type="submit" value="Search">
+</form>""".format(loc, dist, search)
+	results = ""
+	for res in data:
+		blurb = '<div class="result"><h2>{}</h2><p>{}, {} mi.</p><a href="{}">{}</a><p>{}</p></div>\n'.format(res[0].name, res[0].date, res[1], res[0].url, res[0].url, res[0].content)
+		results += blurb
+	return form+results
+
+def dist(lat1,lon1, lat2, lon2):
+	LAT_RATE = 69.094
+	LON_RATE = 69.056
+	x = LAT_RATE*(lat1-lat2)
+	y = LON_RATE*(lon1-lon2)
+	return math.sqrt(x**2+y**2)
+
+#load page data
+pkl = open(os.path.join(app.root_path, 'seth_out.pkl'), 'rb')
+FOOD_PAGES = pickle.load(pkl)
+pkl.close()
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
