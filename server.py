@@ -155,10 +155,10 @@ def food_search(loc, dist, search):
 	tokens = [t.strip().lower() for t in tokens]
 	results = []
 	for f in FOOD_PAGES:
-		if dist(lat, lon, f.lat, f.lon)<dist:
-			if any([t in f.content.lower() for t in tokens]):
-				results.append((f, dist(lat, lon, f.lat, f.lon)))
-	results.sort(key=lambda x: x[0].date)
+		if dist(lat, lon, f[6], f[7])<dist:
+			if any([t in f[5].lower() for t in tokens]):
+				results.append((f, dist(lat, lon, f[6], f[7])))
+	results.sort(key=lambda x: x[0][3])
 	return results
 
 def food_renderer(data, loc, dist, search):
@@ -174,7 +174,7 @@ def food_renderer(data, loc, dist, search):
 </form>""".format(loc, dist, search)
 	results = ""
 	for res in data:
-		blurb = '<div class="result"><h2>{}</h2><p>{}, {} mi.</p><a href="{}">{}</a><p>{}</p></div>\n'.format(res[0].name, res[0].date, res[1], res[0].url, res[0].url, res[0].content)
+		blurb = '<div class="result"><h2>{}</h2><p>{}, {} mi.</p><a href="{}">{}</a><p>{}</p></div>\n'.format(res[0][0], res[0][2], res[1], res[0][1], res[0][1], res[0][5])
 		results += blurb
 	return form+results
 
