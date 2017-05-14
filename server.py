@@ -138,17 +138,17 @@ def food_reviews():
 def food_search(loc, dist, search):
 	#get the coordinates for the given location
 	opener = urllib2.build_opener()
-    opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
+	opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
 	url = 'https://developers.onemap.sg/commonapi/search?searchVal={}&returnGeom=Y&getAddrDetails=Y'.format(loc)
 	response = opener.open(url)
-    f = response.read()
-    response.close()
-    data = json.loads(f)
+	f = response.read()
+	response.close()
+	data = json.loads(f)
 	if int(data['found'])>0:
-        lat = float(data['results'][0]["LATITUDE"])
-        lon = float(data['results'][0]["LONGITUDE"])
-    else:
-        return "Error, please enter an acceptable location"
+		lat = float(data['results'][0]["LATITUDE"])
+		lon = float(data['results'][0]["LONGITUDE"])
+	else:
+    	return "Error, please enter an acceptable location"
 	#skim over places, culling based on distance, to speed up search
 	#search text
 	tokens = search.split()
