@@ -185,7 +185,7 @@ def food_renderer(data, loc, dist, search):
 		results += blurb
 	with open(os.path.join(app.root_path,'src','shiok.css'), 'r') as fcss:
 		css = fcss.read()
-	page = """<!DOCTYPE html>
+	page = u"""<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
