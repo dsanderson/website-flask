@@ -1,0 +1,20 @@
+.content {
+  line-height: 1.4;
+  margin: 40px auto;
+  max-width:650px;
+  line-height:1.6;
+  font-size:18px;
+  color:#000;
+  padding:0 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+h1, h2 {
+  line-height:1.2;
+  font-family: 'Raleway', sans-serif;
+}
+
+.result {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
