@@ -224,7 +224,7 @@ def search_parts():
 		for i in range(5):
 			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
 		docs = part_search.search_documents(request_data)
-		name = hashlib.md5(str(request_data).hexdigest()
+		name = hashlib.md5(str(request_data)).hexdigest()
 		path = os.path.join(app.root_path,'parts','results',name)
 		part_search.write_document(docs,path,request_data)
 		page = u"""<!DOCTYPE html>
