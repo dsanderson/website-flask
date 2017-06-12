@@ -218,7 +218,7 @@ pkl.close()
 
 ##Pages for parts search
 @app.route('/parts', methods=["GET","POST"])
-def part_search():
+def search_parts():
 	if request.method == "POST":
 		request_data = []
 		for i in range(5):
