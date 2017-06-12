@@ -1,7 +1,8 @@
 from flask import Flask, session, redirect, url_for, escape, request, Response
 import secrets
-import time, json, os, datetime, time, glob, urllib2, pickle, math
+import time, json, os, datetime, time, glob, urllib2, pickle, math, hashlib
 from collections import namedtuple
+import part_search
 app = Flask(__name__)
 
 ### Index block
@@ -214,6 +215,43 @@ Place = namedtuple("Place",["name","url","date","price","zip","content","lat","l
 pkl = open(os.path.join(app.root_path, 'seth_out.pkl'), 'rb')
 FOOD_PAGES = pickle.load(pkl)
 pkl.close()
+
+##Pages for parts search
+@app.route('/parts', methods=["GET","POST"])
+def part_search():
+	if request.method == "POST":
+		request_data = []
+		for i in range(5):
+			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
+		docs = part_search.search_documents(request_data)
+		name = hashlib.md5(request_data).hexdigest()
+		path = os.path.join(app.root_path,'parts','results',name)
+		part_search.write_document(docs,path,request_data)
+		page = u"""<!DOCTYPE html>
+	<html lang="en">
+	  <head>
+	    <meta charset="utf-8">
+	    <title>Part Search</title>
+		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+	    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		<style></style>
+	  </head>
+	  <body>
+	  	<a href="/flask/parts">Search Again</a>
+		<p>Found {} potential parts</p>
+		<a href="/flask/parts/results/{}.csv">Download in CSV (Excel) format</a></br>
+		<a href="/flask/parts/results/{}.json">Download in JSON format</a></br>
+	  </body>
+	</html>""".format(len(docs), name, name)
+		return
+	else:
+		with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
+			page = p.read()
+		return page
+
+def validate(request_data):
+	#TODO: Validate request
+	return True
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
