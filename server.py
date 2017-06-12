@@ -243,7 +243,7 @@ def search_parts():
 		<a href="/flask/parts/results/{}.json">Download in JSON format</a></br>
 	  </body>
 	</html>""".format(len(docs), name, name)
-		return
+		return page
 	else:
 		with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
 			page = p.read()
