@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, url_for, escape, request, Response
+from flask import Flask, session, redirect, url_for, escape, request, Response, send_from_directory
 import secrets
 import time, json, os, datetime, time, glob, urllib2, pickle, math, hashlib
 from collections import namedtuple
@@ -248,6 +248,10 @@ def part_search():
 		with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
 			page = p.read()
 		return page
+
+@app.route("/parts/results/<path:filename>")
+def return_part_results(filename):
+	return send_from_directory(os.path.join(app.root_path,'parts','results'),filename,as_attachment=True)
 
 def validate(request_data):
 	#TODO: Validate request
