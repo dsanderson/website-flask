@@ -227,6 +227,26 @@ def search_parts():
 		name = hashlib.md5(str(request_data)).hexdigest()
 		path = os.path.join(app.root_path,'parts','results',name)
 		part_search.write_document(docs,path,request_data)
+		css = u"""body {
+		  line-height: 1.4;
+		  margin: 40px auto;
+		  max-width:650px;
+		  line-height:1.6;
+		  font-size:18px;
+		  color:#000;
+		  padding:0 10px;
+		  font-family: 'Lato', sans-serif;
+		}
+
+		h1, h2 {
+		  line-height:1.2;
+		  font-family: 'Raleway', sans-serif;
+		}
+
+		.result {
+		  padding-top: 10px;
+		  padding-bottom: 10px;
+		}"""
 		page = u"""<!DOCTYPE html>
 	<html lang="en">
 	  <head>
@@ -234,7 +254,7 @@ def search_parts():
 	    <title>Part Search</title>
 		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 	    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-		<style></style>
+		<style>{}</style>
 	  </head>
 	  <body>
 	  	<a href="/flask/parts">Search Again</a>
@@ -242,7 +262,7 @@ def search_parts():
 		<a href="/flask/parts/results/{}.csv">Download in CSV (Excel) format</a></br>
 		<a href="/flask/parts/results/{}.json">Download in JSON format</a></br>
 	  </body>
-	</html>""".format(len(docs), name, name)
+	</html>""".format(css, len(docs), name, name)
 		return page
 	else:
 		with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:

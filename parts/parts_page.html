@@ -5,14 +5,33 @@
   <title>Part Search</title>
 <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-<style></style>
+<style>body {
+  line-height: 1.4;
+  margin: 40px auto;
+  max-width:650px;
+  line-height:1.6;
+  font-size:18px;
+  color:#000;
+  padding:0 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+h1, h2 {
+  line-height:1.2;
+  font-family: 'Raleway', sans-serif;
+}
+
+.result {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}</style>
 </head>
 <body>
   <h1>Parts Search</h1>
   <form action="" method="post">
-    <label for="data0_txt">Tags:</label>
+    <label for="data0_txt">Keywords:</label>
     <input id="data0_txt" type="text" name="data0_txt">
-    <label for="data0_unit">Unit:</label>
+    <label for="data0_unit">Values:</label>
     <select id="data0_unit" type="text" name="data0_unit">
       <option value="">None</option>
       <option value="mass">mass</option>
@@ -28,9 +47,9 @@
       <option value="angular_speed">angular_speed</option>
     </select></br>
 
-    <label for="data1_txt">Tags:</label>
+    <label for="data1_txt">Keywords:</label>
     <input id="data1_txt" type="text" name="data1_txt">
-    <label for="data1_unit">Unit:</label>
+    <label for="data1_unit">Values:</label>
     <select id="data1_unit" type="text" name="data1_unit">
       <option value="">None</option>
       <option value="mass">mass</option>
@@ -46,9 +65,9 @@
       <option value="angular_speed">angular_speed</option>
     </select></br>
 
-    <label for="data2_txt">Tags:</label>
+    <label for="data2_txt">Keywords:</label>
     <input id="data2_txt" type="text" name="data2_txt">
-    <label for="data2_unit">Unit:</label>
+    <label for="data2_unit">Values:</label>
     <select id="data2_unit" type="text" name="data2_unit">
       <option value="">None</option>
       <option value="mass">mass</option>
@@ -64,9 +83,9 @@
       <option value="angular_speed">angular_speed</option>
     </select></br>
 
-    <label for="data3_txt">Tags:</label>
+    <label for="data3_txt">Keywords:</label>
     <input id="data3_txt" type="text" name="data3_txt">
-    <label for="data3_unit">Unit:</label>
+    <label for="data3_unit">Values:</label>
     <select id="data3_unit" type="text" name="data3_unit">
       <option value="">None</option>
       <option value="mass">mass</option>
@@ -82,9 +101,9 @@
       <option value="angular_speed">angular_speed</option>
     </select></br>
 
-    <label for="data4_txt">Tags:</label>
+    <label for="data4_txt">Keywords:</label>
     <input id="data4_txt" type="text" name="data4_txt">
-    <label for="data4_unit">Unit:</label>
+    <label for="data4_unit">Values:</label>
     <select id="data4_unit" type="text" name="data4_unit">
       <option value="">None</option>
       <option value="mass">mass</option>
@@ -100,6 +119,23 @@
       <option value="angular_speed">angular_speed</option>
     </select></br>
     <input type="submit" value="Search">
-  </form>
+  </form></br>
+
+  <h2>What is this?</h2>
+  <p>As part of our research into design automation, we've discovered it's important to have easy access to computer-readable data on real-world components and parts.
+    This allows fast and flexible early-stage exploration of design spaces, while remaining grounded in feasability.  This site allows designers to specify a component in terms of the
+    interfaces it provides (torque, speed, voltage, etc.) and keywords it contains, and gives back a CSV or JSON file that contains all the matching parts we could find scraping suppliers online.</p>
+  <h2>How do I use this?</h2>
+  <p>Each row above reprsents a requirement for the component, and has a textbox for keywords and a selector for values.  Keywords can be a comma-separated list, in which case only one of the items in the list need match the document.
+    Values specify the quantities that the component must specify, and determine the columns in the returned CSV.  If the value selected is "none", the row requires one of the keywords to appear in the component's page.
+    Otherwise, the keywords will need to appear "near" one of the values in the component description.</p>
+  <h2>Examples</h2>
+  <p>Coming soon...</p>
+  <!--<h3>Selecting servos versus motors</h3>
+  <p>We want to discover servos or motors to use in a robotics project.  Our main concern is that the actuator have a minimum speed, and the tradeoff between torque and price.  We start by getting price and torque data for all pages containing the "servo" or "servomotor"</p>
+  <img src="servo_search.png"></img>
+  <p>For the motors, we're willing to gear them down, so we want to know both the toque and speed, in addition to the money.</p>
+  <img src="motor_search.png"></img>
+  <p>In our spreadsheet, we -->
 </body>
 </html>
