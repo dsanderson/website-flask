@@ -9,6 +9,10 @@ import json
 engine = sqla.create_engine(secrets.engine, echo=False)
 Base = declarative_base()
 
+part_types = [("", "None"),("mass", "Mass"),("length","Length"),("angle","Angle"),("time","Time"),
+    ("money","Money"),("voltage","Voltage"),("current","Current"),("force","Force"),
+    ("torque","Torque"),("speed","Speed"),("angular_speed","Angular Speed")]
+
 class Scraped_Site(Base):
     __tablename__ = 'scraped_sites'
     id = sqla.Column(sqla.Integer,primary_key=True)

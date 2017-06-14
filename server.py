@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, url_for, escape, request, Response, send_from_directory
+from flask import Flask, session, redirect, url_for, escape, request, Response, send_from_directory, render_template
 import secrets
 import time, json, os, datetime, time, glob, urllib2, pickle, math, hashlib
 from collections import namedtuple
@@ -221,7 +221,15 @@ pkl.close()
 def search_parts():
 	if request.method == "POST":
 		request_data = []
-		for i in range(5):
+		max_i = 0
+		searching=False
+		while searching:
+			max_i+=1
+			try:
+				request.form['data{}_txt'.format(i)]
+			except KeyError:
+				searching=False
+		for i in range(max_i):
 			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
 		if not validate(request_data):
 			return "Please enter a valid search."
@@ -267,9 +275,9 @@ def search_parts():
 	</html>""".format(css, len(docs), name, name)
 		return page
 	else:
-		with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
-			page = p.read()
-		return page
+		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
+		#	page = p.read()
+		return render_template("parts_page.html", values=part_search.part_types)
 
 @app.route("/parts/results/<path:filename>")
 def return_part_results(filename):
