@@ -17,14 +17,14 @@
     var keyword_box_name = "data"+form_row_counter+"_txt";
     var value_box_name = "data"+form_row_counter+"_txt";
     form_row_counter = form_row_counter+1;
-    var keyword_box = form.appendChild(label);
+    var keyword_box = form.appendChild("label");
     keyword_box.setAttribute("for", keyword_box_name);
     keyword_box.innerHTML = "Keywords:"
-    var keyword_box = form.appendChild(input);
+    var keyword_box = form.appendChild("input");
     keyword_box.setAttribute("id", keyword_box_name);
     keyword_box.setAttribute("name", keyword_box_name);
     keyword_box.setAttribute("type", "text");
-    var select_box = form.appendChild(select);
+    var select_box = form.appendChild("select");
     select_box.setAttribute("id", value_box_name);
     select_box.setAttribute("name", value_box_name);
     if (is_keyword) {
