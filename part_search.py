@@ -63,6 +63,9 @@ def fetch_document_ids_by_text(query):
     q = [q_[0] for q_ in q]
     return q
 
+def search_document_by_unit_text(query):
+    pass
+
 def search_documents(query):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()

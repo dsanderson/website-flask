@@ -222,7 +222,7 @@ def search_parts():
 	if request.method == "POST":
 		request_data = []
 		max_i = 0
-		searching=False
+		searching=True
 		while searching:
 			max_i+=1
 			try:
@@ -234,46 +234,45 @@ def search_parts():
 		if not validate(request_data):
 			return "Please enter a valid search."
 		docs = part_search.search_documents(request_data)
-		name = hashlib.md5(str(request_data)).hexdigest()
-		path = os.path.join(app.root_path,'parts','results',name)
-		part_search.write_document(docs,path,request_data)
-		css = u"""body {
-		  line-height: 1.4;
-		  margin: 40px auto;
-		  max-width:650px;
-		  line-height:1.6;
-		  font-size:18px;
-		  color:#000;
-		  padding:0 10px;
-		  font-family: 'Lato', sans-serif;
-		}
-
-		h1, h2 {
-		  line-height:1.2;
-		  font-family: 'Raleway', sans-serif;
-		}
-
-		.result {
-		  padding-top: 10px;
-		  padding-bottom: 10px;
-		}"""
-		page = u"""<!DOCTYPE html>
-	<html lang="en">
-	  <head>
-	    <meta charset="utf-8">
-	    <title>Part Search</title>
-		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-	    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-		<style>{}</style>
-	  </head>
-	  <body>
-	  	<a href="/flask/parts">Search Again</a>
-		<p>Found {} potential parts</p>
-		<a href="/flask/parts/results/{}.csv">Download in CSV (Excel) format</a></br>
-		<a href="/flask/parts/results/{}.json">Download in JSON format</a></br>
-	  </body>
-	</html>""".format(css, len(docs), name, name)
-		return page
+		if len(docs)==0:
+			page = u"""<!DOCTYPE html>
+			<html lang="en">
+			  <head>
+			    <meta charset="utf-8">
+			    <title>Part Search</title>
+				<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+			    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+				<link rel="stylesheet" href="/css/article.css">
+				<style>{}</style>
+			  </head>
+			  <body>
+			  	<a href="/flask/parts">Search Again</a>
+				<p>Sorry, we couldn't find any parts that match that description. Try removing some keywords and try again!</p>
+			  </body>
+			</html>"""
+			return page
+		else:
+			name = hashlib.md5(str(request_data)).hexdigest()
+			path = os.path.join(app.root_path,'parts','results',name)
+			part_search.write_document(docs,path,request_data)
+			page = u"""<!DOCTYPE html>
+		<html lang="en">
+		  <head>
+		    <meta charset="utf-8">
+		    <title>Part Search</title>
+			<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+		    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+			<link rel="stylesheet" href="/css/article.css">
+			<style>{}</style>
+		  </head>
+		  <body>
+		  	<a href="/flask/parts">Search Again</a>
+			<p>Found {} potential parts</p>
+			<a href="/flask/parts/results/{}.csv">Download in CSV (Excel) format</a></br>
+			<a href="/flask/parts/results/{}.json">Download in JSON format</a></br>
+		  </body>
+		</html>""".format(css, len(docs), name, name)
+			return page
 	else:
 		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
 		#	page = p.read()
@@ -285,7 +284,10 @@ def return_part_results(filename):
 
 def validate(request_data):
 	#TODO: Validate request
-	return True
+	valid = True
+	valid = valid and len(request_data)>0
+	valid = valid and all([t[0] != '' or t[1] != '' for t in request_data])
+	return valid
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
