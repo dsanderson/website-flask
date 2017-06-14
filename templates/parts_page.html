@@ -25,7 +25,7 @@
     select_box.setAttribute("id", value_box_name);
     select_box.setAttribute("name", value_box_name);
     if (is_keyword) {
-      select_box.setAttribute("display", "hidden");
+      select_box.setAttribute("style", "display: none;");
     };
     for (let e of form_value_elems) {
       o = select_box.appendChild(document.createElement("option"));
@@ -35,7 +35,7 @@
       };
       o.innerHTML = e[1];
     };
-    form.appendChild("br");
+    form.appendChild(document.createElement("br"));
   };
   </script>
 </head>
