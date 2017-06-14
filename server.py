@@ -223,8 +223,6 @@ def search_parts():
 		request_data = []
 		for i in range(5):
 			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
-		if not validate(request_data):
-			return "Please enter a valid search."
 		docs = part_search.search_documents(request_data)
 		name = hashlib.md5(str(request_data)).hexdigest()
 		path = os.path.join(app.root_path,'parts','results',name)

@@ -3,31 +3,32 @@
 <head>
   <meta charset="utf-8">
   <title>Part Search</title>
-  <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/css/article.css">
-  <script type="text/javascript">
-  var form_value_elems = { {% for value in values% }
-    {{ item[0] }}:{{ item[1] }},
-  {% endfor %} };
-  var form_row_counter = 0;
-  </script>
-  <script type="text/javascript">
-  function add_value_row() = {
-    var form = document.getElementByID("search_form");
-    var keyword_box_name = "data"+form_row_counter+"_txt";
-    var value_box_name = "data"+form_row_counter+"_txt";
-    form_row_counter = form_row_counter+1;
-    var keyword_box = form.appendChild();
-  };
-  function add_keyword_row() = {
-    //TODO: Automatically add/remove search rows, requires change on other end for templating, auto-finding keys
-  };
-  </script>
+<style>body {
+  line-height: 1.4;
+  margin: 40px auto;
+  max-width:650px;
+  line-height:1.6;
+  font-size:18px;
+  color:#000;
+  padding:0 10px;
+  font-family: 'Lato', sans-serif;
+}
+
+h1, h2 {
+  line-height:1.2;
+  font-family: 'Raleway', sans-serif;
+}
+
+.result {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}</style>
 </head>
-<body class="content">
+<body>
   <h1>Parts Search</h1>
-  <form action="" method="post" id="search_form">
+  <form action="" method="post">
     <label for="data0_txt">Keywords:</label>
     <input id="data0_txt" type="text" name="data0_txt">
     <label for="data0_unit">Values:</label>
@@ -128,10 +129,6 @@
   <p>Each row above reprsents a requirement for the component, and has a textbox for keywords and a selector for values.  Keywords can be a comma-separated list, in which case only one of the items in the list need match the document.
     Values specify the quantities that the component must specify, and determine the columns in the returned CSV.  If the value selected is "none", the row requires one of the keywords to appear in the component's page.
     Otherwise, the keywords will need to appear "near" one of the values in the component description.</p>
-  <h2>But seriously, how do I use this?</h2>
-  <p>Let's say you want to choose an electric motor for a project.  First, you have to figure out your key parameters in deciding which motor to use.  The cost of each motor is a common choice.  Being electric, you might care about the voltage and current to operate each motor.
-    Likewise, you'll probably want to know the torque and speed from each motor.  If you are running quick simulations, or dealing with a large number of motors to choose between, it helps to have the information in a computer-readable format (think Excel).  To use this site to help,
-    you'd start by searching for "motor" with the value set to None.  Then, in the following rows, you'd require values of money, voltage, current, torque and angular speed.
   <h2>Examples</h2>
   <p>Coming soon...</p>
   <!--<h3>Selecting servos versus motors</h3>
