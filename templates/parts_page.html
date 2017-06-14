@@ -17,21 +17,18 @@
     var keyword_box_name = "data"+form_row_counter+"_txt";
     var value_box_name = "data"+form_row_counter+"_txt";
     form_row_counter = form_row_counter+1;
-    var keyword_box = form.appendChild("label");
-    keyword_box.setAttribute("for", keyword_box_name);
-    keyword_box.innerHTML = "Keywords:"
-    var keyword_box = form.appendChild("input");
+    var keyword_box = form.appendChild(document.createElement("input"));
     keyword_box.setAttribute("id", keyword_box_name);
     keyword_box.setAttribute("name", keyword_box_name);
     keyword_box.setAttribute("type", "text");
-    var select_box = form.appendChild("select");
+    var select_box = form.appendChild(document.createElement("select"));
     select_box.setAttribute("id", value_box_name);
     select_box.setAttribute("name", value_box_name);
     if (is_keyword) {
       select_box.setAttribute("display", "hidden");
     };
     for (let e of form_value_elems) {
-      o = select_box.appendChild("option");
+      o = select_box.appendChild(document.createElement("option"));
       o.setAttribute("value",e[0]);
       if (e[0]==="") {
         o.setAttribute("selected","selected");
