@@ -8,12 +8,11 @@
   <link rel="stylesheet" href="/css/article.css">
   <script type="text/javascript">
   var form_value_elems = [ {% for value in values %}
-    [ {{ value[0] }} , {{ value[1] }} ],
-  {% endfor %} ];
+    ["{{ value[0] }}", "{{ value[1] }}"],{% endfor %} ];
   var form_row_counter = 0;
   </script>
   <script type="text/javascript">
-  function add_row(is_keyword) = {
+  function add_row(is_keyword) {
     var form = document.getElementByID("search_form_holder");
     var keyword_box_name = "data"+form_row_counter+"_txt";
     var value_box_name = "data"+form_row_counter+"_txt";
@@ -48,8 +47,8 @@
   <form action="" method="post" id="search_form">
     <div id="search_form_holder">
     </div>
-    <button onclick="add_row(true);">Add more keywords</button>
-    <button onclick="add_row(false);">Add a new interface</button>
+    <button onclick="add_row(true);" type="button">Add more keywords</button>
+    <button onclick="add_row(false);" type="button">Add a new interface</button>
     <input type="submit" value="Search">
   </form></br>
 
