@@ -253,7 +253,7 @@ def search_parts():
 			name = hashlib.md5(str(request_data)).hexdigest()
 			path = os.path.join(app.root_path,'parts','results',name)
 			#part_search.write_document(docs,path,request_data)
-			return str(request_data)+' '+srt(request.form)#redirect("/flask/parts/result/{}".format(name))
+			return str(request_data)+' '+str(request.form)#redirect("/flask/parts/result/{}".format(name))
 	else:
 		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
 		#	page = p.read()
