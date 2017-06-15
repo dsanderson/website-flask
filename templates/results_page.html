@@ -9,11 +9,12 @@
 </head>
 <body>
 <div id="results-container">
-<a href="/flask/parts">Search Again</a>
+<h1>Part Search</h1>
 <p>Found <span id="part-count"></span> potential parts</p>
-<svg id="pc"></svg>
+<svg id="pc"></svg></br>
 <a href="/flask/parts/res/f/{{ name }}.csv">Download in CSV (Excel) format</a></br>
 <a href="/flask/parts/res/f/{{ name }}.json">Download in JSON format</a></br>
+<a href="/flask/parts">Search Again</a>
 <script src="/js/d3/d3.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 var margin = {top: 30, right: 10, bottom: 10, left: 10},
@@ -35,9 +36,9 @@ var svg = d3.select("#pc")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var count;
 d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
 
+  document.getElementById("part-count").innerHTML = cars.length;
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
     return d != "url" && (y[d] = d3.scale.linear()
