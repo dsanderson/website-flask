@@ -232,7 +232,7 @@ def search_parts():
 		if not validate(request_data):
 			return "Please enter a valid search."
 		#docs = part_search.search_documents(request_data)
-		if len(docs)==0:
+		if False:#len(docs)==0:
 			page = u"""<!DOCTYPE html>
 			<html lang="en">
 			  <head>
