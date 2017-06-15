@@ -231,7 +231,7 @@ def search_parts():
 			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
 		if not validate(request_data):
 			return "Please enter a valid search."
-		docs = part_search.search_documents(request_data)
+		#docs = part_search.search_documents(request_data)
 		if len(docs)==0:
 			page = u"""<!DOCTYPE html>
 			<html lang="en">
@@ -252,8 +252,8 @@ def search_parts():
 		else:
 			name = hashlib.md5(str(request_data)).hexdigest()
 			path = os.path.join(app.root_path,'parts','results',name)
-			part_search.write_document(docs,path,request_data)
-			return redirect("/flask/parts/result/{}".format(name))
+			#part_search.write_document(docs,path,request_data)
+			return str(request_data)#redirect("/flask/parts/result/{}".format(name))
 	else:
 		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
 		#	page = p.read()
