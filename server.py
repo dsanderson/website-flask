@@ -225,7 +225,7 @@ def search_parts():
 		searching=True
 		while searching:
 			max_i+=1
-			if 'data{}_txt'.format(max_i) not in request.form.values():
+			if 'data{}_txt'.format(max_i) not in request.form:
 				searching = False
 		for i in range(max_i):
 			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
