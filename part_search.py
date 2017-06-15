@@ -13,7 +13,7 @@ part_types = [("", "None"),("mass", "Mass (kg)"),("length","Length (m)"),("angle
     ("money","Money ($)"),("voltage","Voltage (V)"),("current","Current (A)"),("force","Force (N)"),
     ("torque","Torque (Nm)"),("speed","Speed (m/s)"),("angular_speed","Angular Speed (rad/s)")]
 
-part_dict = {d[0],d[1] for d in part_types}
+parts_dict = {d[0]:d[1] for d in part_types}
 
 class Scraped_Site(Base):
     __tablename__ = 'scraped_sites'
@@ -106,9 +106,9 @@ def write_document(data, path, query, reducer=None):
         for q in query:
             if q[1]!='':
                 if q[0]!='':
-                    names.append(q[0]+' ('+part_dict[q[1]]+')')
+                    names.append(q[0]+' ('+parts_dict[q[1]]+')')
                 else:
-                    names.append(part_dict[q[1]])
+                    names.append(parts_dict[q[1]])
         csv_writer.writerow(names)
         for d in data:
             l = [avg(x) for x in d[1:]]
