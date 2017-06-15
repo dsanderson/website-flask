@@ -225,10 +225,8 @@ def search_parts():
 		searching=True
 		while searching:
 			max_i+=1
-			try:
-				request.form['data{}_txt'.format(max_i)]
-			except KeyError:
-				searching=False
+			if 'data{}_txt' not in request.form.values():
+				searching = False
 		for i in range(max_i):
 			request_data.append((request.form["data{}_txt".format(i)],request.form["data{}_unit".format(i)]))
 		if not validate(request_data):
