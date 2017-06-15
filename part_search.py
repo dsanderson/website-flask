@@ -93,7 +93,10 @@ def search_documents(query):
     return docs
 
 def avg(d):
-    return sum(d)/float(len(d))
+    try:
+        return sum(d)/float(len(d))
+    except:
+        return d
 
 def write_document(data, path, query, reducer=None):
     #build the csv, using average as the aggreagtor for now
