@@ -40,34 +40,42 @@
   </script>
 </head>
 <body class="content">
-  <h1>Parts Search</h1>
-  <form action="" method="post" id="search_form">
-    <div id="search_form_holder">
+  <div id="content" class="search-container">
+    <div class="search area">
+      <h1>Parts Search</h1>
+      <form action="" method="post" id="search_form">
+        <div id="search_form_holder">
+        </div>
+        <button onclick="add_row(true);" type="button">Add more keywords</button>
+        <button onclick="add_row(false);" type="button">Add a new interface</button>
+        <button type="submit" value="Search">
+      </form></br>
     </div>
-    <button onclick="add_row(true);" type="button">Add more keywords</button>
-    <button onclick="add_row(false);" type="button">Add a new interface</button>
-    <input type="submit" value="Search">
-  </form></br>
-
-  <h2>What is this?</h2>
-  <p>As part of our research into design automation, we've discovered it's important to have easy access to computer-readable data on real-world components and parts.
-    This allows fast and flexible early-stage exploration of design spaces, while remaining grounded in feasability.  This site allows designers to specify a component in terms of the
-    interfaces it provides (torque, speed, voltage, etc.) and keywords it contains, and gives back a CSV or JSON file that contains all the matching parts we could find scraping suppliers online.</p>
-  <h2>How do I use this?</h2>
-  <p>Each row above reprsents a requirement for the component, and has a textbox for keywords and a selector for values.  Keywords can be a comma-separated list, in which case only one of the items in the list need match the document.
-    Values specify the quantities that the component must specify, and determine the columns in the returned CSV.  If the value selected is "none", the row requires one of the keywords to appear in the component's page.
-    Otherwise, the keywords will need to appear "near" one of the values in the component description.</p>
-  <h2>But seriously, how do I use this?</h2>
-  <p>Let's say you want to choose an electric motor for a project.  First, you have to figure out your key parameters in deciding which motor to use.  The cost of each motor is a common choice.  Being electric, you might care about the voltage and current to operate each motor.
-    Likewise, you'll probably want to know the torque and speed from each motor.  If you are running quick simulations, or dealing with a large number of motors to choose between, it helps to have the information in a computer-readable format (think Excel).  To use this site to help,
-    you'd start by searching for "motor" with the value set to None.  Then, in the following rows, you'd require values of money, voltage, current, torque and angular speed.
-  <h2>Examples</h2>
-  <p>Coming soon...</p>
-  <!--<h3>Selecting servos versus motors</h3>
-  <p>We want to discover servos or motors to use in a robotics project.  Our main concern is that the actuator have a minimum speed, and the tradeoff between torque and price.  We start by getting price and torque data for all pages containing the "servo" or "servomotor"</p>
-  <img src="servo_search.png"></img>
-  <p>For the motors, we're willing to gear them down, so we want to know both the toque and speed, in addition to the money.</p>
-  <img src="motor_search.png"></img>
-  <p>In our spreadsheet, we -->
+    <div class="search desc">
+      <h2>What is this?</h2>
+      <p>As part of our research into design automation, we've discovered it's important to have easy access to computer-readable data on real-world components and parts.
+        This allows fast and flexible early-stage exploration of design spaces, while remaining grounded in feasability.  This site allows designers to specify a component in terms of the
+        interfaces it provides (torque, speed, voltage, etc.) and keywords it contains, and gives back a CSV or JSON file that contains all the matching parts we could find scraping suppliers online.</p>
+      <h2>How do I use this?</h2>
+      <p>Each row above reprsents a requirement for the component, and has a textbox for keywords and a selector for values.  Keywords can be a comma-separated list, in which case only one of the items in the list need match the document.
+        Values specify the quantities that the component must specify, and determine the columns in the returned CSV.  If the value selected is "none", the row requires one of the keywords to appear in the component's page.
+        Otherwise, the keywords will need to appear "near" one of the values in the component description.</p>
+      <h2>But seriously, how do I use this?</h2>
+      <p>Let's say you want to choose an electric motor for a project.  First, you have to figure out your key parameters in deciding which motor to use.  The cost of each motor is a common choice.  Being electric, you might care about the voltage and current to operate each motor.
+        Likewise, you'll probably want to know the torque and speed from each motor.  If you are running quick simulations, or dealing with a large number of motors to choose between, it helps to have the information in a computer-readable format (think Excel).  To use this site to help,
+        you'd start by searching for "motor" with the value set to None.  Then, in the following rows, you'd require values of money, voltage, current, torque and angular speed.
+      <h2>Examples</h2>
+      <p>Coming soon...</p>
+      <!--<h3>Selecting servos versus motors</h3>
+      <p>We want to discover servos or motors to use in a robotics project.  Our main concern is that the actuator have a minimum speed, and the tradeoff between torque and price.  We start by getting price and torque data for all pages containing the "servo" or "servomotor"</p>
+      <img src="servo_search.png"></img>
+      <p>For the motors, we're willing to gear them down, so we want to know both the toque and speed, in addition to the money.</p>
+      <img src="motor_search.png"></img>
+      <p>In our spreadsheet, we -->
+    </div>
+    <script type="text/javascript">
+      add_row(true);
+    </script>
+  </div>
 </body>
 </html>
