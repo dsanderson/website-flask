@@ -9,9 +9,11 @@ import json
 engine = sqla.create_engine(secrets.engine, echo=False)
 Base = declarative_base()
 
-part_types = [("", "None"),("mass", "Mass"),("length","Length"),("angle","Angle"),("time","Time"),
-    ("money","Money"),("voltage","Voltage"),("current","Current"),("force","Force"),
-    ("torque","Torque"),("speed","Speed"),("angular_speed","Angular Speed")]
+part_types = [("", "None"),("mass", "Mass (kg)"),("length","Length (m)"),("angle","Angle (rad)"),("time","Time (s)"),
+    ("money","Money ($)"),("voltage","Voltage (V)"),("current","Current (A)"),("force","Force (N)"),
+    ("torque","Torque (Nm)"),("speed","Speed (m/s)"),("angular_speed","Angular Speed (rad/s)")]
+
+part_dict = {d[0],d[1] for d in part_types}
 
 class Scraped_Site(Base):
     __tablename__ = 'scraped_sites'
@@ -100,16 +102,19 @@ def write_document(data, path, query, reducer=None):
     #build the csv, using average as the aggreagtor for now
     with open(path+'.csv', 'w') as csv_file:
         csv_writer = csv.writer(csv_file)
-        names = [q[0]+' ('+q[1]+')' for q in query if q[1]!='']
-        names = ['url']+names
+        names = ['url']
+        for q in query:
+            if q[1]!='':
+                if q[0]!='':
+                    names.append(q[0]+' ('+part_dict[q[1]]+')')
+                else:
+                    names.append(part_dict[q[1]])
         csv_writer.writerow(names)
         for d in data:
             l = [avg(x) for x in d[1:]]
             l = [d[0]]+l
             csv_writer.writerow(l)
     #build the json document, using the units as keys from the query
-    names = [q[0]+' ('+q[1]+')' for q in query if q[1]!='']
-    names = ['url']+names
     data_out = []
     for d in data:
         data_out.append({n:d for n,d in zip(names, d[1:])})
