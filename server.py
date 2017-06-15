@@ -226,7 +226,7 @@ def search_parts():
 		while searching:
 			max_i+=1
 			try:
-				request.form['data{}_txt'.format(i)]
+				request.form['data{}_txt'.format(max_i)]
 			except KeyError:
 				searching=False
 		for i in range(max_i):
