@@ -73,18 +73,16 @@ def fetch_document_ids_by_query(query):
 def fetch_document_data(doc_ids, query):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()
-    urls = tuple([d[1] for d in doc_ids])
+    data = [tuple([d[1] for d in doc_ids])]
     ids = [d[0] for d in doc_ids]
-    data = [tuple(ids)]
     for q in query:
         if q[1]!='':
             keywords = [t.strip().lower() for t in q[0].split(',')]
-            db_query = session.query(Scraped_Site.id, sqla.func.array_agg(Unit_Num.value)).join(Unit_Text).filter(Scraped_Site.id==Unit_Num.source).filter(Unit_Text.unit==Unit_Num.id).filter(Unit_Num.unit_type==q[1]).filter(sqla.or_(*[sqla.and_(Unit_Text.unit==Unit_Num.id, Unit_Text.text.ilike('%{}%'.format(t))) for t in keywords])).group_by(Scraped_Site.id)
+            db_query = session.query(Scraped_Site.id, sqla.func.array_agg(Unit_Num.value)).join(Unit_Num).join(Unit_Text).filter(Scraped_Site.id==Unit_Num.source).filter(Unit_Text.unit==Unit_Num.id).filter(Unit_Text.document==Scraped_Site.id).filter(Unit_Num.unit_type==q[1]).filter(sqla.or_(*[sqla.and_(Unit_Text.unit==Unit_Num.id, Unit_Text.text.ilike('%{}%'.format(t))) for t in keywords])).filter(Scraped_Site.id.in_(ids)).group_by(Scraped_Site.id)
             vals = db_query.order_by(Scraped_Site.id.desc()).all()
             vals = [v[1] for v in vals]
             data.append(tuple(vals))
     session.close()
-    data.append(urls)
     return zip(*data)
 
 def search_documents(query):
