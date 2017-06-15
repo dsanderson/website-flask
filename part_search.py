@@ -40,83 +40,57 @@ class Unit_Num(Base):
     def repr(self):
         return "<Unit_Num(val={},type={})>".format(url,unit_type)
 
-def fetch_document_ids_by_unit_types(unit_types):
+class Unit_Text(Base):
+    __tablename__ = 'unit_texts'
+    id = sqla.Column(sqla.Integer,primary_key=True)
+    unit = sqla.Column(sqla.Integer, sqla.ForeignKey('unit_nums.id'))
+    document = sqla.Column(sqla.Integer, sqla.ForeignKey('scraped_sites.id'))
+    text = sqla.Column(sqla.types.Unicode())
+
+    def repr(self):
+        return "<Unit_Text(id={})>".format(id)
+
+def fetch_document_ids_by_query(query):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()
-    matches = []
-    q = session.query(Unit_Num.source).\
-        group_by(Unit_Num.source).\
-        having(sqla.and_(*[sqla.func.string_agg(Unit_Num.unit_type, ' ').like('%'+t+'%') for t in unit_types]))
-    matches = q.all()
-    matches = [m[0] for m in matches]
+    db_query = session.query(Scraped_Site.id, Scraped_Site.url)
+    units_query = session.query(Unit_Num).join(Unit_Text).filter(Unit_Num.source==Scraped_Site.id).filter(Unit_Text.unit==Unit_Num.id)
+    for i, q in enumerate(query):
+        keywords = [t.strip().lower() for t in q[0].split(',')]
+        if q[1]=='':
+            db_query = db_query.filter(sqla.or_(*[Scraped_Site.text.ilike('%{}%'.format(t)) for t in keywords]))
+        else:
+            if q[0] == '':
+                db_query = db_query.filter(units_query.filter(Unit_Num.unit_type==q[1]).exists())
+            else:
+                db_query = db_query.filter(units_query.filter(Unit_Num.unit_type==q[1]).filter(sqla.or_(*[sqla.and_(Unit_Text.unit==Unit_Num.id, Unit_Text.text.ilike('%{}%'.format(t))) for t in keywords])).exists())
+        #if i>0:
+        #    db_query = db_query.filter(Scraped_Site.id.in_([q_[0] for q_ in qs]))
+    res = db_query.order_by(Scraped_Site.id.desc()).all()
     session.close()
-    return matches
+    return res
 
-def fetch_document_ids_by_text(query):
-    #construct the query
-    components = [sqla.or_(*[Scraped_Site.text.ilike('%{}%'.format(t.strip().lower())) for t in q[0].split(',')]) for q in query if q[0]!='']
-    sql_filter = sqla.and_(*components)
+def fetch_document_data(doc_ids, query):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()
-    q = session.query(Scraped_Site.id).filter(sql_filter).all()
+    urls = tuple([d[1] for d in doc_ids])
+    ids = [d[0] for d in doc_ids]
+    data = [tuple(ids)]
+    for q in query:
+        if q[1]!='':
+            keywords = [t.strip().lower() for t in q[0].split(',')]
+            db_query = session.query(Scraped_Site.id, Unit_Num.value).join(Unit_Text).filter(Scraped_Site.id==Unit_Num.source).filter(Unit_Text.unit==Unit_Num.id).filter(Unit_Num.unit_type==q[1]).filter(sqla.or_(*[sqla.and_(Unit_Text.unit==Unit_Num.id, Unit_Text.text.ilike('%{}%'.format(t))) for t in keywords]))
+            vals = db_query.order_by(Scraped_Site.id.desc()).all()
+            vals = [v[1] for v in vals]
+            data.append(tuple(vals))
     session.close()
-    q = [q_[0] for q_ in q]
-    return q
-
-def search_document_by_unit_text(query):
-    pass
+    data.append(urls)
+    return zip(*data)
 
 def search_documents(query):
-    Session = sqla.orm.sessionmaker(bind=engine)
-    session = Session()
-    unit_types = [q[1] for q in query]
-    doc_ids_by_unit = fetch_document_ids_by_unit_types(unit_types)
-    doc_ids_by_text = fetch_document_ids_by_text(query)
-    print len(doc_ids_by_text), len(doc_ids_by_unit), doc_ids_by_text[0], doc_ids_by_unit[0]
-    doc_ids = set(doc_ids_by_unit).intersection(set(doc_ids_by_text))
-    print len(doc_ids)
-    matched_documents = []
-    for doc_id in doc_ids:
-        doc = session.query(Scraped_Site).filter(Scraped_Site.id==doc_id).all()[0]
-        units = session.query(Unit_Num).filter(Unit_Num.source==doc.id).all()
-        #iterate over query, checking against units and text content
-        query_results = []
-        query_values = []
-        for q in query:
-            query_texts = q[0].split(',')
-            query_texts = [t.strip().lower() for t in query_texts]
-            if q[1]=='':
-                query_results.append(any([t in doc.text.lower() for t in query_texts]))
-            else:
-                unit = session.query(Unit_Num).filter(Unit_Num.source==doc.id, Unit_Num.unit_type==q[1]).all()
-                vals = [u.value for u in unit]
-                lower_loc = [u.loc_bottom for u in unit]
-                found=False
-                if q[0]!='':
-                    #search radius
-                    rad = 15
-                    matched_units = []
-                    for l in lower_loc:
-                        matched_unit = False
-                        for t in query_texts:
-                            fragment = doc.text.lower()[max(0,l-len(t)-rad):l+1]
-                            if t in fragment:
-                                matched_unit = True
-                                break
-                        matched_units.append(matched_unit)
-                    if any(matched_units):
-                        found=True
-                        vals=[v[0] for v in zip(vals, matched_units) if v[1]]
-                else:
-                    found=True
-                if found:
-                    query_results.append(True)
-                    query_values.append(tuple(vals))
-                else:
-                    query_results.append(False)
-        if all(query_results):
-            matched_documents.append(tuple([doc.id]+query_values+[doc.url]))
-    return matched_documents
+    ms = fetch_document_ids_by_query(query)
+    docs = fetch_document_data(ms, query)
+    return docs
 
 def avg(d):
     return sum(d)/float(len(d))
