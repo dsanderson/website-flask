@@ -104,12 +104,12 @@ def write_document(data, path, query, reducer=None):
         names = ['url']+names
         csv_writer.writerow(names)
         for d in data:
-            l = [avg(x) for x in d[1:-1]]
-            l = [d[-1]]+l
+            l = [avg(x) for x in d[1:]]
+            l = [d[0]]+l
             csv_writer.writerow(l)
     #build the json document, using the units as keys from the query
     names = [q[0]+' ('+q[1]+')' for q in query if q[1]!='']
-    names = names+['url']
+    names = ['url']+names
     data_out = []
     for d in data:
         data_out.append({n:d for n,d in zip(names, d[1:])})
