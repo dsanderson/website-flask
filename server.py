@@ -253,30 +253,17 @@ def search_parts():
 			name = hashlib.md5(str(request_data)).hexdigest()
 			path = os.path.join(app.root_path,'parts','results',name)
 			part_search.write_document(docs,path,request_data)
-			page = u"""<!DOCTYPE html>
-		<html lang="en">
-		  <head>
-		    <meta charset="utf-8">
-		    <title>Part Search</title>
-			<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-		    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-			<link rel="stylesheet" href="/css/article.css">
-			<style>{}</style>
-		  </head>
-		  <body>
-		  	<a href="/flask/parts">Search Again</a>
-			<p>Found {} potential parts</p>
-			<a href="/flask/parts/results/{}.csv">Download in CSV (Excel) format</a></br>
-			<a href="/flask/parts/results/{}.json">Download in JSON format</a></br>
-		  </body>
-		</html>""".format(css, len(docs), name, name)
-			return page
+			return redirect("/flask/parts/result/{}".format(name))
 	else:
 		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
 		#	page = p.read()
 		return render_template("parts_page.html", values=part_search.part_types)
 
-@app.route("/parts/results/<path:filename>")
+@app.route("/parts/result/<string:name>")
+def return_results_page(name):
+	return render_template("results_page.html", name=name)
+
+@app.route("/parts/res/f/<path:filename>")
 def return_part_results(filename):
 	return send_from_directory(os.path.join(app.root_path,'parts','results'),filename,as_attachment=True)
 
