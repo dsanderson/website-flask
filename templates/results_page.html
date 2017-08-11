@@ -113,7 +113,7 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
       .attr("x", -8)
       .attr("width", 16);
 
-  var table = document.getElementById("parts-table");
+  var table = d3.select("#parts-table");
   console.log(table)
   var thead = table.append('thead')
 	var tbody = table.append('tbody')
