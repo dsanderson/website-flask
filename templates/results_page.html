@@ -15,6 +15,7 @@
 <a href="/flask/parts/res/f/{{ name }}.csv">Download in CSV (Excel) format</a></br>
 <a href="/flask/parts/res/f/{{ name }}.json">Download in JSON format</a></br>
 <a href="/flask/parts">Search Again</a>
+<table id="parts-table"></table>
 <script src="/js/d3/d3.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 var margin = {top: 30, right: 10, bottom: 10, left: 10},
@@ -111,6 +112,18 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
     .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
+
+  var table = document.getElementById("parts-table");
+  var table_row = table.append("tr");
+  d3.keys(cars[0]).forEach(function(elem) {
+    table_row.append("td").text(elem);
+  });
+  cars.slice(0,50).forEach(function(elem) {
+    var table_row = table.append("tr");
+    elem.forEach(function(e) {
+      table_row.append("td").text(e);
+    });
+  });
 });
 
 function position(d) {
