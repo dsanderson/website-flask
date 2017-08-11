@@ -115,6 +115,8 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
 
   var table = document.getElementById("parts-table");
   var table_row = table.append("tr");
+  console.log(table_row);
+  console.log(d3.keys(cars[0]));
   d3.keys(cars[0]).forEach(function(elem) {
     table_row.append("td").text(elem);
   });
