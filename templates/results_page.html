@@ -113,30 +113,40 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
     .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
+/*      .text(function (d) {
+        if (d.value.includes("http")) {
+          return "<a href="+d.value+">"+d.value+"</a>";
+        }
+        else {
+          return d.value;
+        }})*/
+  make_table(cars);
+});
 
+function make_table(cars) {
   var table = d3.select("#parts-table");
   console.log(table)
   var thead = table.append('thead')
-	var tbody = table.append('tbody')
+  var tbody = table.append('tbody')
   var columns = d3.keys(cars[0])
 
-	thead.append('tr')
-	  .selectAll('th')
-	    .data(columns)
-	    .enter()
-	  .append('th')
-	    .text(function (d) { return d })
+  thead.append('tr')
+    .selectAll('th')
+      .data(columns)
+      .enter()
+    .append('th')
+      .text(function (d) { return d })
 
-	var rows = tbody.selectAll('tr')
-	    .data(cars.slice(0,50))
-	    .enter()
-	  .append('tr')
+  var rows = tbody.selectAll('tr')
+      .data(cars.slice(0,50))
+      .enter()
+    .append('tr')
 
-	var cells = rows.selectAll('td')
-	    .data(function(row) {
-	    	return columns.map(function (column) {
-	    		return { column: column, value: row[column] }
-	      })
+  var cells = rows.selectAll('td')
+      .data(function(row) {
+        return columns.map(function (column) {
+          return { column: column, value: row[column] }
+        })
       })
       .enter()
     .append('td')
@@ -149,14 +159,7 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
           node.text(d.value);
         }
       });
-/*      .text(function (d) {
-        if (d.value.includes("http")) {
-          return "<a href="+d.value+">"+d.value+"</a>";
-        }
-        else {
-          return d.value;
-        }})*/
-});
+}
 
 function position(d) {
   var v = dragging[d];
