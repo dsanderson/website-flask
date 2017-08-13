@@ -140,13 +140,21 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
       })
       .enter()
     .append('td')
-      .text(function (d) {
+      .append(function(d) {
+        if (d.value.includes("http")) {
+          return "a";
+        }
+        else {
+          return "span";
+        }
+      });
+/*      .text(function (d) {
         if (d.value.includes("http")) {
           return "<a href="+d.value+">"+d.value+"</a>";
         }
         else {
           return d.value;
-        }})
+        }})*/
 });
 
 function position(d) {
