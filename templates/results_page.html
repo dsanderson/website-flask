@@ -39,6 +39,7 @@ var svg = d3.select("#pc")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
+  cars.reverse();
   Window.cars = cars;
   document.getElementById("part-count").innerHTML = cars.length;
   // Extract the list of dimensions and create a scale for each.
