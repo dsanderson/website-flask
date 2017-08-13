@@ -125,7 +125,8 @@ d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
 
 function make_table(cars) {
   var table = d3.select("#parts-table");
-  console.log(table)
+  table.selectAll("*").remove();
+  //console.log(table)
   var thead = table.append('thead')
   var tbody = table.append('tbody')
   var columns = d3.keys(cars[0])
@@ -188,6 +189,7 @@ function brush() {
       return extents[i][0] <= d[p] && d[p] <= extents[i][1];
     }) ? null : "none";
   });
+  make_table(actives);
 }
 </script>
 </div>
