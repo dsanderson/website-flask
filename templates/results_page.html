@@ -158,7 +158,7 @@ function make_table(cars) {
           node.append("a").text(d.value).attr("href", d.value);
         }
         else {
-          var val = float(d.value);
+          var val = parseFloat(d.value);
           node.text(val.toFixed(2));
         }
       });
