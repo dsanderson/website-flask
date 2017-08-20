@@ -274,6 +274,75 @@ def validate(request_data):
 	valid = valid and all([t[0] != '' or t[1] != '' for t in request_data])
 	return valid
 
+### SBF Logo Project stuff here
+#@app.route("/sbf/sbf/set/<string:cube>")
+def sbf_logo_write_cube(cube):
+	try:
+		cube = int(cube)
+	except ValueError:
+		return ""
+	#TODO figure out transformer
+	timestamp = time.time()
+	command = {'cube':cube, 'timestamp':timestamp}
+	with open(os.path.join(app.root_path,'sbf_cube.json'),'w') as f:
+		f.write(json.dumps(command))
+
+@app.route("/sbf/sbf/get")
+def sbf_logo_get_cube():
+	with open(os.path.join(app.root_path,'sbf_cube.json'),'r') as f:
+		data = json.loads(f.read())
+	ts = time.time()
+	if ts-data['timestamp']>5:
+		return "-1"
+	return str(int(data["cube"]))
+
+#@app.route("/sbf/sbff/set/<string:cube>")
+def sbff_logo_write_cube(cube):
+	try:
+		cube = int(cube)
+	except ValueError:
+		return ""
+	#TODO figure out transformer
+	timestamp = time.time()
+	command = {'cube':cube, 'timestamp':timestamp}
+	with open(os.path.join(app.root_path,'sbff_cube.json'),'w') as f:
+		f.write(json.dumps(command))
+
+@app.route("/sbf/sbff/get")
+def sbff_logo_get_cube():
+	with open(os.path.join(app.root_path,'sbff_cube.json'),'r') as f:
+		data = json.loads(f.read())
+	ts = time.time()
+	if ts-data['timestamp']>5:
+		return "-1"
+	return str(int(data["cube"]))
+
+@app.route("/sbf/display-scan/<string:cube>")
+def sbf_dispatch_cube(cube):
+	try:
+		cube = int(cube)
+	except ValueError:
+		return ""
+	data = lookup_cube(cube)
+	if data["sign"]="SBFF":
+		sbff_logo_write_cube(data["sign_number"])
+	else:
+		sbf_logo_write_cube(data["sign_number"])
+
+def lookup_cube(cube):
+	cube = int(cube)
+	if cube=<79:
+		sign = "SBFF"
+		sign_number = sign_number
+	else:
+		sign = "SBF"
+		sign_number = sign_number-79
+	return {"cube":cube, "sign_number":sign_number, "sign":sign, "render":"", "name":""}
+
+@app.route("/sbf/display")
+def return_sbf_display():
+	return render_template("sbf_display.html")
+
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
 
