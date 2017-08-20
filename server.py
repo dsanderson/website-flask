@@ -331,7 +331,7 @@ def sbf_dispatch_cube(cube):
 
 def lookup_cube(cube):
 	cube = int(cube)
-	if cube=<79:
+	if cube<=79:
 		sign = "SBFF"
 		sign_number = sign_number
 	else:
