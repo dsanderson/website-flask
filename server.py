@@ -333,10 +333,10 @@ def lookup_cube(cube):
 	cube = int(cube)
 	if cube<=79:
 		sign = "SBFF"
-		sign_number = sign_number
+		sign_number = cube
 	else:
 		sign = "SBF"
-		sign_number = sign_number-79
+		sign_number = cube-79
 	return {"cube":cube, "sign_number":sign_number, "sign":sign, "render":"", "name":""}
 
 @app.route("/sbf/display")
