@@ -324,7 +324,7 @@ def sbf_dispatch_cube(cube):
 	except ValueError:
 		return ""
 	data = lookup_cube(cube)
-	if data["sign"]="SBFF":
+	if data["sign"]=="SBFF":
 		sbff_logo_write_cube(data["sign_number"])
 	else:
 		sbf_logo_write_cube(data["sign_number"])
