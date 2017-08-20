@@ -325,9 +325,9 @@ def sbf_dispatch_cube(cube):
 		return ""
 	data = lookup_cube(cube)
 	if data["sign"]=="SBFF":
-		sbff_logo_write_cube(data["sign_number"])
+		return sbff_logo_write_cube(data["sign_number"])
 	else:
-		sbf_logo_write_cube(data["sign_number"])
+		return sbf_logo_write_cube(data["sign_number"])
 
 def lookup_cube(cube):
 	cube = int(cube)
