@@ -286,6 +286,7 @@ def sbf_logo_write_cube(cube):
 	command = {'cube':cube, 'timestamp':timestamp}
 	with open(os.path.join(app.root_path,'sbf_cube.json'),'w') as f:
 		f.write(json.dumps(command))
+	return str(cube)
 
 @app.route("/sbf/sbf/get")
 def sbf_logo_get_cube():
@@ -307,6 +308,7 @@ def sbff_logo_write_cube(cube):
 	command = {'cube':cube, 'timestamp':timestamp}
 	with open(os.path.join(app.root_path,'sbff_cube.json'),'w') as f:
 		f.write(json.dumps(command))
+	return str(cube)
 
 @app.route("/sbf/sbff/get")
 def sbff_logo_get_cube():
