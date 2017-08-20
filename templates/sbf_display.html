@@ -11,7 +11,7 @@
       let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false });
       scanner.addListener('scan', function (content) {
         var xmlHttp = new XMLHttpRequest();
-        var url = "/flask/sbf/display_scan/"+content
+        var url = "/flask/sbf/display-scan/"+content
         xmlHttp.onreadystatechange = function() {
               if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
                   {return 0};
