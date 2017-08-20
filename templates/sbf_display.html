@@ -8,7 +8,7 @@
     <video id="preview"></video>
     <p id="output-text"></p>
     <script type="text/javascript">
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: true });
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false });
       scanner.addListener('scan', function (content) {
         var xmlHttp = new XMLHttpRequest();
         var url = "/flask/sbf/display_scan/"+content
