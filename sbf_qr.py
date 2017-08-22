@@ -22,7 +22,7 @@ qr_codes = load_qr_codes()
 def log_and_fetch(scanned_number):
     with io.open("/var/www/flask/scans.log", "a") as f:
         ts = int(time.time())
-        f.write("{},{}\n".format(ts, scanned_number))
+        f.write(u"{},{}\n".format(ts, scanned_number))
     try:
         return qr_codes[scanned_number]
     except KeyError:
