@@ -3,6 +3,7 @@ import secrets
 import time, json, os, datetime, time, glob, urllib2, pickle, math, hashlib
 from collections import namedtuple
 import part_search
+import sbf_qr
 app = Flask(__name__)
 
 ### Index block
@@ -332,18 +333,17 @@ def sbf_dispatch_cube(cube):
 		return sbf_logo_write_cube(data["sign_number"])
 
 def lookup_cube(cube):
-	cube = int(cube)
-	if cube<=79:
-		sign = "SBFF"
-		sign_number = cube
-	else:
-		sign = "SBF"
-		sign_number = cube-79
-	return {"cube":cube, "sign_number":sign_number, "sign":sign, "render":"", "name":""}
+	return sbf_qr.log_and_fetch(cube)
 
 @app.route("/sbf/display")
 def return_sbf_display():
 	return render_template("sbf_display.html")
+
+### Block for SBF qr code scanning
+@app.route("/sbf/qr-lookup/<string:code>")
+def return_qr_data(code):
+	data = sbf_qr.log_and_fetch(int(code))
+	return json.dumps(data)
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
