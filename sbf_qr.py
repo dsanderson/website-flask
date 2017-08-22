@@ -5,10 +5,10 @@ def load_qr_codes():
     with open("/var/www/flask/qr_codes.csv") as f:
         reader = csv.reader(f)
         for row in reader:
-            data = {"qr":int(row[0]),
+            data = {"qr":int(row[0])+1000000,
                 "cube":int(row[0]),
-                "sign_number":int(row[0]) if int(row[0])-1000000<=79 else int(row[0])-79,
-                "sign":"SBFF" if int(row[0])-1000000<=79 else "SBF",
+                "sign_number":int(row[0]) if int(row[0])<=79 else int(row[0])-79,
+                "sign":"SBFF" if int(row[0])<=79 else "SBF",
                 "salutation":row[2],
                 "name":row[3],
                 "designation":row[4],
