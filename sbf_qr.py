@@ -1,4 +1,4 @@
-import os, time, csv, io, data, copy
+import os, time, csv, io, copy
 
 def load_qr_codes():
     qr_codes = []
