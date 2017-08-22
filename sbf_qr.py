@@ -2,7 +2,7 @@ import os, time, csv, io, copy
 
 def load_qr_codes():
     qr_codes = []
-    with open("qr_codes.csv") as f:
+    with open("/var/www/flask/qr_codes.csv") as f:
         reader = csv.reader(f)
         for row in reader:
             data = {"qr":int(row[0]),
@@ -20,7 +20,10 @@ def load_qr_codes():
 qr_codes = load_qr_codes()
 
 def log_and_fetch(scanned_number):
-    with io.open("scans.log", "a") as f:
+    with io.open("/var/www/flask/scans.log", "a") as f:
         ts = int(time.time())
         f.write("{},{}\n".format(ts, scanned_number))
-    return qr_codes[scanned_number]
+    try:
+        return qr_codes[scanned_number]
+    except KeyError:
+        return None
