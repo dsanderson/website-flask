@@ -1,23 +1,54 @@
+
 <!DOCTYPE html>
 <html>
   <head>
     <title>SBF Display Scanner</title>
-    <script type="text/javascript" src="/qr-test/instascan.min.js"></script>
+    <script type="text/javascript" src="instascan.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/sbf/registration/registration.css">
   </head>
   <body>
-    <video id="preview"></video>
-    <p id="output-text"></p>
+    <div class="wrapper">
+      <div class="left-column">
+        <div class="header">
+          <p class="instructions">Please scan your QR code</p>
+          <video width="350" id="preview"></video>
+        </div>
+      </div>
+
+      <div class="right-column" id="right-column">
+        <div id="greeting">
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript">
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false });
-      scanner.addListener('scan', function (content) {
+      function reset() {
+        document.getElementById("greeting").style.visibility = "hidden";
+        document.getElementById('right-column').style.display = "none";
+      }
+      function set_page() {
+        var greeting = "Thank you, your cube is now illuminated in white";
+        document.getElementById("greeting").innerHTML = greeting;
+        document.getElementById("greeting").style.visibility = "visible";
+        document.getElementById('right-column').style.display = "inline";
+      }
+      function fetch_and_set(code) {
+        console.log(code);
         var xmlHttp = new XMLHttpRequest();
-        var url = "/flask/sbf/display-scan/"+content
+        var url = "/flask/sbf/qr-lookup/"+code
         xmlHttp.onreadystatechange = function() {
               if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                  {return 0};
+                  {set_page();
+                  var timeoutID = window.setTimeout(reset, 5000);};
         }
         xmlHttp.open("GET", url, true);
         xmlHttp.send(null);
+      }
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false });
+      scanner.addListener('scan', function (content) {
+        fetch_and_set(content);
       });
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
@@ -28,6 +59,7 @@
       }).catch(function (e) {
         console.error(e);
       });
+      reset();
     </script>
   </body>
 </html>
