@@ -39,7 +39,7 @@
       function fetch_and_set(code) {
         console.log(code);
         var xmlHttp = new XMLHttpRequest();
-        var url = "/flask/sbf/qr-lookup/"+code
+        var url = "/flask/sbf/display-scan/"+code
         xmlHttp.onreadystatechange = function() {
               if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
                   {set_page();
