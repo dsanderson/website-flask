@@ -3,7 +3,6 @@
 <html>
   <head>
     <title>SBF Display Scanner</title>
-    <script type="text/javascript" src="/sbf/registration/instascan.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/sbf/registration/registration.css">
@@ -12,19 +11,15 @@
     <div class="wrapper">
       <div class="top-matter">
         <div class="img-wrapper">
-          <img src="/sbf/registration/SBF_logo.png"></img>
-          <img src="/sbf/registration/SBFF_logo.png"></img>
+          <img src="/sbf/registration/SBF_logo_cubes.png"></img>
+          <img src="/sbf/registration/SBFF_logo_cubes.png"></img>
         </div>
         <p>Official Opening of SBF and SBFF Foundation Offices</p>
         <hr></hr>
       </div>
 
       <div class="left-column">
-        <div class="header">
-          <div id="video-wrapper">
-            <video width="300" id="preview"></video>
-          </div>
-        </div>
+        <p>Please scan your QR code</p>
       </div>
 
       <div class="right-column" id="right-column">
@@ -34,42 +29,70 @@
     </div>
 
     <script type="text/javascript">
-      function reset() {
-        document.getElementById("greeting").style.visibility = "hidden";
-        document.getElementById('right-column').style.display = "none";
+    function reset() {
+      document.getElementById("greeting").style.visibility = "hidden";
+      document.getElementById('right-column').style.display = "none";
+    }
+    function set_page(data) {
+      var greeting = "<p>Thank you, your cube is now illuminated!</p>";
+      var render_url = ""//"https://dsa.tech/sbf/renders/"+data["cube"]+"/untitled_VR.4.html"
+      document.getElementById("greeting").innerHTML = greeting;
+      document.getElementById("greeting").style.visibility = "visible";
+      document.getElementById('right-column').style.display = "inline";
+    }
+    function fetch_and_set(code) {
+      console.log(code);
+      var xmlHttp = new XMLHttpRequest();
+      var url = "/flask/sbf/qr-lookup/"+code
+      xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                {set_page(JSON.parse(xmlHttp.responseText));
+                var timeoutID = window.setTimeout(reset, 10000);};
       }
-      function set_page() {
-        var greeting = "Thank you, your cube is now illuminated in white";
-        document.getElementById("greeting").innerHTML = greeting;
-        document.getElementById("greeting").style.visibility = "visible";
-        document.getElementById('right-column').style.display = "inline";
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+    }
+    function capture_keys(key) {
+      console.log(key.keyCode);
+      if (key.keyCode == 49) {
+        window.qr_code = window.qr_code+"1";
       }
-      function fetch_and_set(code) {
-        console.log(code);
-        var xmlHttp = new XMLHttpRequest();
-        var url = "/flask/sbf/display-scan/"+code
-        xmlHttp.onreadystatechange = function() {
-              if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                  {set_page();
-                  var timeoutID = window.setTimeout(reset, 5000);};
-        }
-        xmlHttp.open("GET", url, true);
-        xmlHttp.send(null);
+      else if (key.keyCode == 50) {
+        window.qr_code = window.qr_code+"2";
       }
-      let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false });
-      scanner.addListener('scan', function (content) {
-        fetch_and_set(content);
-      });
-      Instascan.Camera.getCameras().then(function (cameras) {
-        if (cameras.length > 0) {
-          scanner.start(cameras[0]);
-        } else {
-          console.error('No cameras found.');
-        }
-      }).catch(function (e) {
-        console.error(e);
-      });
-      reset();
+      else if (key.keyCode == 51) {
+        window.qr_code = window.qr_code+"3";
+      }
+      else if (key.keyCode == 52) {
+        window.qr_code = window.qr_code+"4";
+      }
+      else if (key.keyCode == 53) {
+        window.qr_code = window.qr_code+"5";
+      }
+      else if (key.keyCode == 54) {
+        window.qr_code = window.qr_code+"6";
+      }
+      else if (key.keyCode == 55) {
+        window.qr_code = window.qr_code+"7";
+      }
+      else if (key.keyCode == 56) {
+        window.qr_code = window.qr_code+"8";
+      }
+      else if (key.keyCode == 57) {
+        window.qr_code = window.qr_code+"9";
+      }
+      else if (key.keyCode == 48) {
+        window.qr_code = window.qr_code+"0";
+      }
+      else if (key.keyCode == 13) {
+        fetch_and_set(window.qr_code);
+        console.log(window.qr_code)
+        window.qr_code = "";
+      };
+    }
+    window.qr_code = "";
+    document.onkeydown = capture_keys;
+    reset();
     </script>
   </body>
 </html>
