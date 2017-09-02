@@ -11,7 +11,7 @@ Base = declarative_base()
 
 part_types = [("", "None"),("mass", "Mass (kg)"),("length","Length (m)"),("angle","Angle (rad)"),("time","Time (s)"),
     ("money","Money ($)"),("voltage","Voltage (V)"),("current","Current (A)"),("force","Force (N)"),
-    ("torque","Torque (Nm)"),("speed","Speed (m/s)"),("angular_speed","Angular Speed (rad/s)")]
+    ("torque","Torque (Nm)"),("speed","Speed (m/s)"),("angular_speed","Angular Speed (rad/s)"),("current_capacity","Current Storage (As)")]
 
 parts_dict = {d[0]:d[1] for d in part_types}
 
@@ -56,7 +56,7 @@ def fetch_document_ids_by_query(query):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()
     db_query = session.query(Scraped_Site.id, Scraped_Site.url)
-    units_query = session.query(Unit_Num).join(Unit_Text).filter(Unit_Num.source==Scraped_Site.id).filter(Unit_Text.unit==Unit_Num.id)
+    units_query = session.query(Unit_Num).join(Unit_Text).filter(Unit_Num.date_added > datetime.datetime(2017, 9, 1, 0, 0, 0, 0)).filter(Unit_Num.source==Scraped_Site.id).filter(Unit_Text.unit==Unit_Num.id)
     for i, q in enumerate(query):
         keywords = [t.strip().lower() for t in q[0].split(',')]
         if q[1]=='':
