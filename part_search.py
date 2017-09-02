@@ -56,16 +56,19 @@ def fetch_document_ids_by_query(query):
     Session = sqla.orm.sessionmaker(bind=engine)
     session = Session()
     db_query = session.query(Scraped_Site.id, Scraped_Site.url)
-    units_query = session.query(Unit_Num).join(Unit_Text).filter(Unit_Num.date_added > datetime.datetime(2017, 9, 1, 0, 0, 0, 0)).filter(Unit_Num.source==Scraped_Site.id).filter(Unit_Text.unit==Unit_Num.id)
+    #units_query = session.query(Unit_Num).join(Unit_Text).filter(Unit_Num.date_added > datetime.datetime(2017, 9, 1)).filter(Unit_Num.source==Scraped_Site.id).filter(Unit_Text.unit==Unit_Num.id)
+    #TODO: return unit text queries (for bearings, etc.), need to fix the unit_num.id portion of unit_texts
+    units_query = session.query(Unit_Num).filter(Unit_Num.date_added > datetime.datetime(2017, 9, 1)).filter(Unit_Num.source==Scraped_Site.id)
     for i, q in enumerate(query):
         keywords = [t.strip().lower() for t in q[0].split(',')]
         if q[1]=='':
-            db_query = db_query.filter(sqla.or_(*[Scraped_Site.text.ilike('%{}%'.format(t)) for t in keywords]))
+            db_query = db_query.filter(sqla.or_(*[Scraped_Site.text.ilike(u'%{}%'.format(t)) for t in keywords]))
         else:
             if q[0] == '':
                 db_query = db_query.filter(units_query.filter(Unit_Num.unit_type==q[1]).exists())
             else:
-                db_query = db_query.filter(units_query.filter(Unit_Num.unit_type==q[1]).filter(sqla.or_(*[sqla.and_(Unit_Text.unit==Unit_Num.id, Unit_Text.text.ilike('%{}%'.format(t))) for t in keywords])).exists())
+                raise NotImplemented
+                #db_query = db_query.filter(units_query.filter(Unit_Num.unit_type==q[1]).filter(sqla.or_(*[sqla.and_(Unit_Text.unit==Unit_Num.id, Unit_Text.text.ilike(u'%{}%'.format(t))) for t in keywords])).exists())
         #if i>0:
         #    db_query = db_query.filter(Scraped_Site.id.in_([q_[0] for q_ in qs]))
     res = db_query.order_by(Scraped_Site.id.desc()).all()
