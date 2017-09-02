@@ -51,11 +51,11 @@ def log_and_fetch(scanned_number):
     try:
         return qr_codes[scanned_number]
     except KeyError:
-        return {"qr":0
-            "cube":0
-            "sign_number":-1
-            "sign":"SBF"
-            "salutation":""
-            "name":""
-            "designation":""
+        return {"qr":0,
+            "cube":0,
+            "sign_number":-1,
+            "sign":"SBF",
+            "salutation":"",
+            "name":"",
+            "designation":"",
             "company":""}
