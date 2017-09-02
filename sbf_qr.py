@@ -21,7 +21,7 @@ def load_companies():
 def load_qr_codes():
     qr_codes = []
     companies = load_companies()
-    with open("qr_codes.csv") as f:
+    with open("/var/www/flask/qr_codes.csv") as f:
         reader = csv.reader(f)
         for row in reader:
             data = {"qr":int(row[0])+1000000,
