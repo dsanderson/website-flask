@@ -3,11 +3,11 @@ import os, time, csv, io, copy
 def load_companies():
     """load the list of companies, and return as a dictionary, with the keys as normalized company names, and the sign index and name after"""
     companies = []
-    with open("sbff_cubes.txt", "r") as f:
+    with open("/var/www/flask/sbff_cubes.txt", "r") as f:
         cs = f.readlines()
     cs = [c.strip().lower().strip('the').strip() for c in cs if c.strip() != ""]
     companies = companies + cs
-    with open("sbf_cubes.txt", "r") as f:
+    with open("/var/www/flask/sbf_cubes.txt", "r") as f:
         cs = f.readlines()
     cs = [c.strip().lower().strip('the').strip() for c in cs if c.strip() != ""]
     companies = companies + cs
