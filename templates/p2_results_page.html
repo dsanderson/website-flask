@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Part Search</title>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/css/search.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div id="results-container">
+<h1>Part Search</h1>
+<p>Found <span id="part-count"></span> potential parts</p>
+<svg id="pc"></svg></br>
+<a href="/flask/parts/res/f/{{ name }}.csv">Download in CSV (Excel) format</a></br>
+<a href="/flask/parts/res/f/{{ name }}.json">Download in JSON format</a></br>
+<a href="/flask/parts">Search Again</a>
+<table id="parts-table"></table>
+<script src="/js/d3/d3.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+var margin = {top: 30, right: 10, bottom: 10, left: 10},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal().rangePoints([0, width], 1),
+    y = {},
+    dragging = {};
+
+var line = d3.svg.line(),
+    axis = d3.svg.axis().orient("left"),
+    background,
+    foreground;
+
+var svg = d3.select("#pc")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("/flask/parts/res/f/{{ name }}.csv", function(error, cars) {
+  cars.reverse();
+  Window.cars = cars;
+  document.getElementById("part-count").innerHTML = cars.length;
+  // Extract the list of dimensions and create a scale for each.
+  x.domain(dimensions = d3.keys(cars[0]).filter(function(d) {
+    return d != "url" && (y[d] = d3.scale.linear()
+        .domain(d3.extent(cars, function(p) { return +p[d]; }))
+        .range([height, 0]));
+  }));
+
+  // Add grey background lines for context.
+  background = svg.append("g")
+      .attr("class", "background")
+    .selectAll("path")
+      .data(cars)
+    .enter().append("path")
+      .attr("d", path);
+
+  // Add blue foreground lines for focus.
+  foreground = svg.append("g")
+      .attr("class", "foreground")
+    .selectAll("path")
+      .data(cars)
+    .enter().append("path")
+      .attr("d", path);
+
+  // Add a group element for each dimension.
+  var g = svg.selectAll(".dimension")
+      .data(dimensions)
+    .enter().append("g")
+      .attr("class", "dimension")
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      .call(d3.behavior.drag()
+        .origin(function(d) { return {x: x(d)}; })
+        .on("dragstart", function(d) {
+          dragging[d] = x(d);
+          background.attr("visibility", "hidden");
+        })
+        .on("drag", function(d) {
+          dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+          foreground.attr("d", path);
+          dimensions.sort(function(a, b) { return position(a) - position(b); });
+          x.domain(dimensions);
+          g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+        })
+        .on("dragend", function(d) {
+          delete dragging[d];
+          transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+          transition(foreground).attr("d", path);
+          background
+              .attr("d", path)
+            .transition()
+              .delay(500)
+              .duration(0)
+              .attr("visibility", null);
+        }));
+
+  // Add an axis and title.
+  g.append("g")
+      .attr("class", "axis")
+      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+    .append("text")
+      .style("text-anchor", "middle")
+      .attr("y", -9)
+      .text(function(d) { return d; });
+
+  // Add and store a brush for each axis.
+  g.append("g")
+      .attr("class", "brush")
+      .each(function(d) {
+        d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
+      })
+    .selectAll("rect")
+      .attr("x", -8)
+      .attr("width", 16);
+/*      .text(function (d) {
+        if (d.value.includes("http")) {
+          return "<a href="+d.value+">"+d.value+"</a>";
+        }
+        else {
+          return d.value;
+        }})*/
+  make_table(cars);
+});
+
+function make_table(cars) {
+  var table = d3.select("#parts-table");
+  table.selectAll("*").remove();
+  //console.log(table)
+  var thead = table.append('thead')
+  var tbody = table.append('tbody')
+  var columns = d3.keys(cars[0])
+
+  thead.append('tr')
+    .selectAll('th')
+      .data(columns)
+      .enter()
+    .append('th')
+      .text(function (d) { return d })
+
+  var rows = tbody.selectAll('tr')
+      .data(cars.slice(0,50))
+      .enter()
+    .append('tr')
+
+  var cells = rows.selectAll('td')
+      .data(function(row) {
+        return columns.map(function (column) {
+          return { column: column, value: row[column] }
+        })
+      })
+      .enter()
+    .append('td')
+      .each(function(d) {
+        var node = d3.select(this);
+        if (d.value.includes("http")) {
+          node.append("a").text(d.value).attr("href", d.value);
+        }
+        else {
+          var val = parseFloat(d.value);
+          node.text(val.toFixed(2));
+        }
+      });
+}
+
+function position(d) {
+  var v = dragging[d];
+  return v == null ? x(d) : v;
+}
+
+function transition(g) {
+  return g.transition().duration(500);
+}
+
+// Returns the path for a given data point.
+function path(d) {
+  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
+}
+
+function brushstart() {
+  d3.event.sourceEvent.stopPropagation();
+}
+
+// Handles a brush event, toggling the display of foreground lines.
+function brush() {
+  var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
+      extents = actives.map(function(p) { return y[p].brush.extent(); });
+  foreground.style("display", function(d) {
+    return actives.every(function(p, i) {
+      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    }) ? null : "none";
+  });
+  var brushed_cars = Window.cars.filter(function(d) {
+    return actives.every(function(p, i) {
+      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+    })
+  });
+  make_table(brushed_cars);
+}
+</script>
+</div>
+</body>
+</html>

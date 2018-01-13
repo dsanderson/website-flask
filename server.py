@@ -345,6 +345,51 @@ def return_qr_data(code):
 	data = sbf_qr.log_and_fetch(int(code))
 	return json.dumps(data)
 
+## Pages for part search v2
+##Pages for parts search
+@app.route('/p', methods=["GET","POST"])
+def search_parts():
+	if request.method == "POST":
+		request_data = [request.form['{}'.format(i)] for i in xrange(5)]
+		request_data = [r for r in request_data if r.strip()!='']
+		request_data = [r.split(",") for r in request_data]
+		request_data = [[_.lower().strip() for _ in r] for r in request_data]
+		parts, labels = part_search_v2.joint_search(request_data[0], request_data[1:])
+		if len(parts)==0:
+			page = u"""<!DOCTYPE html>
+			<html lang="en">
+			  <head>
+			    <meta charset="utf-8">
+			    <title>Part Search</title>
+				<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+			    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+				<link rel="stylesheet" href="/css/article.css">
+				<style>{}</style>
+			  </head>
+			  <body>
+			  	<a href="/flask/parts">Search Again</a>
+				<p>Sorry, we couldn't find any parts that match that description. Try removing some keywords and try again!</p>
+			  </body>
+			</html>"""
+			return page
+		else:
+			name = hashlib.md5(str(request_data)).hexdigest()
+			path = os.path.join(app.root_path,'parts','results',name)
+			part_search.write_document(docs,path,labels)
+			return redirect("/flask/p/result/{}".format(name))
+	else:
+		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
+		#	page = p.read()
+		return render_template("p2_page.html")
+
+@app.route("/p/result/<string:name>")
+def return_results_page(name):
+	return render_template("p2_results_page.html", name=name)
+
+@app.route("/p/res/f/<path:filename>")
+def return_part_results(filename):
+	return send_from_directory(os.path.join(app.root_path,'parts','results'),filename,as_attachment=True)
+
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
 
