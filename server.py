@@ -349,7 +349,7 @@ def return_qr_data(code):
 ## Pages for part search v2
 ##Pages for parts search
 @app.route('/p', methods=["GET","POST"])
-def search_parts():
+def search_parts_v2():
 	if request.method == "POST":
 		request_data = [request.form['{}'.format(i)] for i in xrange(5)]
 		request_data = [r for r in request_data if r.strip()!='']
@@ -384,11 +384,11 @@ def search_parts():
 		return render_template("p2_page.html")
 
 @app.route("/p/result/<string:name>")
-def return_results_page(name):
+def return_results_page_v2(name):
 	return render_template("p2_results_page.html", name=name)
 
 @app.route("/p/res/f/<path:filename>")
-def return_part_results(filename):
+def return_part_results_v2(filename):
 	return send_from_directory(os.path.join(app.root_path,'parts','results'),filename,as_attachment=True)
 
 # set the secret key.  keep this really secret:
