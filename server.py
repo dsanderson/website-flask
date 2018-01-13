@@ -3,6 +3,7 @@ import secrets
 import time, json, os, datetime, time, glob, urllib2, pickle, math, hashlib
 from collections import namedtuple
 import part_search
+import part_search_v2
 import sbf_qr
 app = Flask(__name__)
 
@@ -375,7 +376,7 @@ def search_parts():
 		else:
 			name = hashlib.md5(str(request_data)).hexdigest()
 			path = os.path.join(app.root_path,'parts','results',name)
-			part_search.write_document(docs,path,labels)
+			part_search_v2.write_document(parts,path,labels)
 			return redirect("/flask/p/result/{}".format(name))
 	else:
 		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
