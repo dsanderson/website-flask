@@ -360,5 +360,19 @@ def write_document(data, path, labels, reducer=None):
         row = ["url"]+pad_empty(sizes, [[l] for l in labels[1:]])
         csvw.writerow(row)
         for d in data:
-            row = [d[0]]+pad_empty(sizes, [list(k) for k in d[1:]])
+            row = [d[0]]+pad_empty(sizes, [[abs(_k) for _k in k] for k in d[1:]])
+            csvw.writerow(row)
+
+def write_document_d3(data, path, labels):
+    with open(path+'.csv', 'w') as csv_file:
+        csvw = csv.writer(csv_file)
+        row = ["url"]
+        for l in labels[1:]:
+            row = row + [l+" (min)", l+" (max)"]
+        csvw.writerow(row)
+        for d in data:
+            row = [d[0]]
+            for k in d[1:]:
+                _k = [abs(x) for x in k]
+                row = row+[min(_k), max(_k)]
             csvw.writerow(row)

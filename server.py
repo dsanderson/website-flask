@@ -376,7 +376,12 @@ def search_parts_v2():
 		else:
 			name = hashlib.md5(str(request_data)).hexdigest()
 			path = os.path.join(app.root_path,'parts','results',name)
-			part_search_v2.write_document(parts,path,labels)
+			d3_path = path+"_d3"
+			labels_ext = [r[0]+" " for r in request_data[1:]]
+			labels_ext = [labels_ext[i] + part_search_v2.parts_dict[labels[i+1]] for i in range(len(labels[1:]))]
+			labels_ext = ['url']+labels_ext
+			part_search_v2.write_document(parts,path,labels_ext)
+			part_search_v2.write_document_d3(parts,d3_path,labels_ext)
 			return redirect("/flask/p/result/{}".format(name))
 	else:
 		#with open(os.path.join(app.root_path,'parts','parts_page.html'),'r') as p:
