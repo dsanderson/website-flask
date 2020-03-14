@@ -396,6 +396,10 @@ def return_results_page_v2(name):
 def return_part_results_v2(filename):
 	return send_from_directory(os.path.join(app.root_path,'parts','results'),filename,as_attachment=True)
 
+@app.route("/zk")
+def zk():
+	return render_template("zettelkasten.html", content=zettelkasten.zk())
+
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key
 
