@@ -5,6 +5,7 @@ from collections import namedtuple
 import part_search
 import part_search_v2
 import sbf_qr
+import zettelkasten
 app = Flask(__name__)
 
 ### Index block
