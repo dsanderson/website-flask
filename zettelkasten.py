@@ -4,16 +4,16 @@ fname = 'QuickNote.md'
 def parse_id(id):
     """Convert a numeric (#.#.#...) or alphanumeric (#X#X#...) to a list"""
     cleaned = "".join(id.lower().split("."))
-    if len(set(cleaned) - set('1234567890.'))==0:
-        l = id.split(".")
-        l = tuple([int(i) for i in l])
+    #if len(set(cleaned) - set('1234567890.'))==0:
+    l = id.split(".")
+    l = tuple([int(i.strip()) for i in l])
     return l
 
 def parse_title(title):
     """consume a line containing an id and extract the formatted ID, and the title"""
     t = title.strip().strip('>').strip()
     t = t.split()
-    id = parse_id(t[0])
+    id = parse_id(t[0].strip())
     title = " ".join(t[1:])
     return id, title
 
