@@ -1,5 +1,5 @@
 import markdown2, re
-fname = 'Quicknote.md'
+fname = 'QuickNote.md'
 
 def parse_id(id):
     """Convert a numeric (#.#.#...) or alphanumeric (#X#X#...) to a list"""
