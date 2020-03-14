@@ -4,7 +4,7 @@ fname = 'QuickNote.md'
 def parse_id(id):
     """Convert a numeric (#.#.#...) or alphanumeric (#X#X#...) to a list"""
     cleaned = "".join(id.lower().split("."))
-    if cleaned.isdecimal():
+    if len(set(cleaned) - set('1234567890.'))==0:
         l = id.split(".")
         l = tuple([int(i) for i in l])
     return l
