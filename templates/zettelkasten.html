@@ -23,7 +23,7 @@
   <div id="content" class="container">
     {% for c in content%}
     <div class="item">
-        <div class="title" id="{{ c.id }}-title">> <a href="#" title="hide/show" onclick="toggle({{ c.id }}; return false;)">{{ c.id }}</a> {{ c.title | safe }}</div>
+        <div class="title" id="{{ c.id }}-title">> <a href="#" title="hide/show" onclick="toggle({{ c.id }}); return false;">{{ c.id }}</a> {{ c.title | safe }}</div>
         <div class="content" id="{{ c.id }}" style="display:none;">
             {{ c.content | safe }}
         </div>
