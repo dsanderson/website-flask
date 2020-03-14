@@ -399,7 +399,7 @@ def return_part_results_v2(filename):
 
 @app.route("/zk")
 def zk():
-	return render_template("zettelkasten.html", content=zettelkasten.zk())
+	return render_template("zettelkasten.html", content=zettelkasten.zk(os.path.join(app.root_path,"QuickNote.md")))
 
 # set the secret key.  keep this really secret:
 app.secret_key = secrets.key

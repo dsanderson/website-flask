@@ -24,10 +24,10 @@ def get_parent(id):
     """"""
     pass
 
-def zk():
+def zk(file):
     flat_tree = {}
     #tree = []
-    with open(os.path.join(app.root_path,fname), 'r') as f:
+    with open(file, 'r') as f:
         data = f.readlines()
     #find lines that contain an ID
     regex = re.compile(r"\A\s*>\s*[\w\.]+")
