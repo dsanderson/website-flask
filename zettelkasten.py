@@ -52,5 +52,5 @@ def zk(file):
     tree = sorted(flat_tree.keys())
     output = []
     for t in tree:
-        output.append({"id":".".join([str(i) for i in t]), "title":markdown2.markdown(flat_tree[t]["title"]), "content":markdown2.markdown(flat_tree[t]["content"])})
+        output.append({"id":".".join([str(i) for i in t]), "title":flat_tree[t]["title"], "content":markdown2.markdown(flat_tree[t]["content"])})
     return output
